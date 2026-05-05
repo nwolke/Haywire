@@ -261,6 +261,25 @@ public class RelationshipsController : ControllerBase
         relationship.target_entity_type = existing.target_entity_type;
         relationship.target_entity_id = existing.target_entity_id;
 
+        // When the type changes, check that no other row already occupies the
+        // new source/target/type/campaign combination (UNIQUE constraint).
+        if (relationship.relationship_type_id != existing.relationship_type_id
+            && existing.campaign_id.HasValue)
+        {
+            bool conflictExists = await _repository.RelationshipExistsAsync(
+                existing.source_entity_type,
+                existing.source_entity_id,
+                existing.target_entity_type,
+                existing.target_entity_id,
+                relationship.relationship_type_id,
+                existing.campaign_id.Value);
+
+            if (conflictExists)
+            {
+                return Conflict("A relationship of this type between these entities already exists in this campaign.");
+            }
+        }
+
         await _repository.UpdateRelationshipAsync(relationship);
         _logger.LogInformation("Updated relationship {RelationshipId} for account {AccountId}", id, accountId);
 

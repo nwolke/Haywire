@@ -12,7 +12,11 @@ const getErrorMessage = (error: unknown): string => {
   return 'Save failed';
 };
 
-export function useAutoSave<T>(saveFn: (value: T) => Promise<void>, delay = 300) {
+export function useAutoSave<T>(
+  saveFn: (value: T) => Promise<void>,
+  delay = 300,
+  { enableBeforeUnload = false }: { enableBeforeUnload?: boolean } = {}
+) {
   const saveFnRef = useRef(saveFn);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -113,6 +117,10 @@ export function useAutoSave<T>(saveFn: (value: T) => Promise<void>, delay = 300)
   }, [scheduleSave]);
 
   useEffect(() => {
+    if (!enableBeforeUnload) {
+      return;
+    }
+
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!timerRef.current && statusRef.current !== 'saving') {
         return;
@@ -126,7 +134,7 @@ export function useAutoSave<T>(saveFn: (value: T) => Promise<void>, delay = 300)
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [flush]);
+  }, [enableBeforeUnload, flush]);
 
   useEffect(() => {
     return () => {

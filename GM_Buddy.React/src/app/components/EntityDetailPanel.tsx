@@ -36,7 +36,6 @@ const editableRelationshipTypes: Relationship['type'][] = [
   'rival',
   'stranger',
   'vassal/follower',
-  'neutral',
 ];
 
 interface EditableRelationshipRowProps {

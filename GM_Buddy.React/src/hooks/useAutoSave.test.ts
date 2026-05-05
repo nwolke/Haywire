@@ -31,7 +31,7 @@ describe('useAutoSave', () => {
 
   it('marks beforeunload when there is a pending save', async () => {
     const saveFn = vi.fn(async () => Promise.resolve());
-    const { result } = renderHook(() => useAutoSave(saveFn, 300));
+    const { result } = renderHook(() => useAutoSave(saveFn, 300, { enableBeforeUnload: true }));
 
     act(() => {
       result.current.scheduleSave('pending');
