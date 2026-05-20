@@ -45,6 +45,9 @@ const relationshipLegend: { type: string; color: string; label: string }[] = [
   { type: 'neutral', color: '#6b7280', label: 'Other' },
 ];
 
+const SYNTHETIC_ORGANIZATION_ID_BASE = -1_000_000;
+const SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE = -2_000_000;
+
 export function CampaignPage() {
   const { id } = useParams<{ id: string }>();
   const campaignId = id ? Number(id) : undefined;
@@ -132,7 +135,7 @@ export function CampaignPage() {
     const fallbackOrganizations = Array.from(factionNamesByKey.entries())
       .filter(([key]) => !matchedFactionKeys.has(key))
       .map(([_, name], index): EntityItem => ({
-        id: -1 - index,
+        id: SYNTHETIC_ORGANIZATION_ID_BASE - index,
         name,
         entityType: 'organization',
         isSynthetic: true,
@@ -175,7 +178,7 @@ export function CampaignPage() {
       }
 
       return [{
-        id: -10_000 - index,
+        id: SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE - index,
         npcId1: npc.id,
         npcId2: organization.id,
         entityType1: 'npc',
