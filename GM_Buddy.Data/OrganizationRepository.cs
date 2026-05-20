@@ -58,7 +58,8 @@ public class OrganizationRepository : IOrganizationRepository
     {
         using IDbConnection dbConnection = _dbConnector.CreateConnection();
 
-        // Get organizations that have relationships with this campaign
+        // Get organizations that have active relationships with this campaign
+        // regardless of whether they are relationship source or target.
         const string sql = @"
             SELECT DISTINCT
                 o.organization_id,
@@ -68,10 +69,16 @@ public class OrganizationRepository : IOrganizationRepository
                 o.created_at,
                 o.updated_at
             FROM public.organization o
+            INNER JOIN public.campaign c
+                ON c.campaign_id = @CampaignId
+                AND c.account_id = o.account_id
             INNER JOIN public.entity_relationship er 
-                ON er.source_entity_type = 'organization' 
-                AND er.source_entity_id = o.organization_id
-                AND er.campaign_id = @CampaignId
+                ON er.campaign_id = @CampaignId
+                AND (
+                    (er.source_entity_type = 'organization' AND er.source_entity_id = o.organization_id)
+                    OR
+                    (er.target_entity_type = 'organization' AND er.target_entity_id = o.organization_id)
+                )
             WHERE er.is_active = true
             ORDER BY o.created_at DESC";
 
