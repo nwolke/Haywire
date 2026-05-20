@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@/test/utils";
 import { CampaignAnalyticsPanel } from "@/app/components/CampaignAnalyticsPanel";
 import type { NPC, Relationship } from "@/types/npc";
+import type { EntityItem } from "@/types/entity";
 import type { PC } from "@/types/pc";
 
 describe("CampaignAnalyticsPanel", () => {
@@ -14,6 +15,11 @@ describe("CampaignAnalyticsPanel", () => {
   const pcs: PC[] = [
     { id: 10, name: "Dain", description: "Paladin", campaignId: 1 },
     { id: 11, name: "Ely", description: "Ranger", campaignId: 1 },
+  ];
+
+  const organizations: EntityItem[] = [
+    { id: 201, name: "Guild", entityType: "organization" },
+    { id: 202, name: "Council", entityType: "organization" },
   ];
 
   const relationships: Relationship[] = [
@@ -47,7 +53,7 @@ describe("CampaignAnalyticsPanel", () => {
   ];
 
   it("renders entity counts and organization totals", () => {
-    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} relationships={relationships} />);
+    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} organizations={organizations} relationships={relationships} />);
 
     const npcCard = screen.getByText("NPCs").closest("[data-slot='card']");
     const pcCard = screen.getByText("PCs").closest("[data-slot='card']");
@@ -59,20 +65,20 @@ describe("CampaignAnalyticsPanel", () => {
   });
 
   it("computes average attitude from all relationships", () => {
-    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} relationships={relationships} />);
+    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} organizations={organizations} relationships={relationships} />);
 
     expect(screen.getByText("0.33")).toBeInTheDocument();
   });
 
   it("shows the most-connected entity using inbound and outbound relationships", () => {
-    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} relationships={relationships} />);
+    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} organizations={organizations} relationships={relationships} />);
 
     expect(screen.getByText("Aria")).toBeInTheDocument();
     expect(screen.getByText("2 links")).toBeInTheDocument();
   });
 
   it("renders empty-state chart messaging when no relationships exist", () => {
-    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} relationships={[]} />);
+    render(<CampaignAnalyticsPanel npcs={npcs} pcs={pcs} organizations={organizations} relationships={[]} />);
 
     expect(screen.getByText("No relationships to analyze yet.")).toBeInTheDocument();
   });

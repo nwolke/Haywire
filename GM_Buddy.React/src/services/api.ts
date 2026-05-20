@@ -2,7 +2,9 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
 import { NPC } from '@/types/npc';
 import { PC } from '@/types/pc';
+import { Organization } from '@/types/organization';
 import { Campaign } from '@/types/campaign';
+import type { EntityType } from '@/types/entity';
 import { getIdToken, refreshTokens, clearTokens } from './cognito';
 import { extractApiError } from './apiError';
 
@@ -233,8 +235,8 @@ const transformApiRelationshipToRelationship = (apiRel: ApiEntityRelationship): 
   id: number;
   npcId1: number;
   npcId2: number;
-  entityType1: 'npc' | 'pc';
-  entityType2: 'npc' | 'pc';
+  entityType1: EntityType;
+  entityType2: EntityType;
   type: string;
   description?: string;
   attitudeScore: number;
@@ -261,13 +263,17 @@ const transformApiRelationshipToRelationship = (apiRel: ApiEntityRelationship): 
     npcId2: apiRel.target_entity_id,
     entityType1: (() => {
       const t = apiRel.source_entity_type?.toLowerCase();
-      if (t !== 'npc' && t !== 'pc') console.warn(`[transformApiRelationship] Unexpected source_entity_type: "${apiRel.source_entity_type}", defaulting to 'npc'`);
-      return (t === 'pc' ? 'pc' : 'npc') as 'npc' | 'pc';
+      if (t !== 'npc' && t !== 'pc' && t !== 'organization') {
+        console.warn(`[transformApiRelationship] Unexpected source_entity_type: "${apiRel.source_entity_type}", defaulting to 'npc'`);
+      }
+      return (t === 'pc' || t === 'organization' ? t : 'npc') as EntityType;
     })(),
     entityType2: (() => {
       const t = apiRel.target_entity_type?.toLowerCase();
-      if (t !== 'npc' && t !== 'pc') console.warn(`[transformApiRelationship] Unexpected target_entity_type: "${apiRel.target_entity_type}", defaulting to 'npc'`);
-      return (t === 'pc' ? 'pc' : 'npc') as 'npc' | 'pc';
+      if (t !== 'npc' && t !== 'pc' && t !== 'organization') {
+        console.warn(`[transformApiRelationship] Unexpected target_entity_type: "${apiRel.target_entity_type}", defaulting to 'npc'`);
+      }
+      return (t === 'pc' || t === 'organization' ? t : 'npc') as EntityType;
     })(),
     type: typeName || 'neutral',
     description: apiRel.description,
@@ -573,6 +579,38 @@ const normalizeApiPc = (raw: ApiPc): PC => {
   };
 };
 
+export interface ApiOrganization {
+  organization_id?: number;
+  organizationId?: number;
+  name?: string;
+  description?: string;
+}
+
+const normalizeApiOrganization = (raw: ApiOrganization): Organization => {
+  const id = raw.organization_id ?? raw.organizationId;
+  const name = raw.name;
+
+  if (id === undefined) {
+    console.warn(
+      'normalizeApiOrganization: missing organization_id/organizationId in API response, defaulting id to 0.',
+      raw
+    );
+  }
+
+  if (name === undefined) {
+    console.warn(
+      'normalizeApiOrganization: missing name in API response, defaulting name to empty string.',
+      raw
+    );
+  }
+
+  return {
+    id: id ?? 0,
+    name: name ?? '',
+    description: raw.description,
+  };
+};
+
 // PC API calls
 export const pcApi = {
   // Get all PCs for the authenticated user
@@ -607,6 +645,13 @@ export const pcApi = {
   // Delete a PC
   async deletePc(id: number): Promise<void> {
     await apiClient.delete(`/Pcs/${id}`);
+  },
+};
+
+export const organizationApi = {
+  async getOrganizations(): Promise<Organization[]> {
+    const response = await apiClient.get<ApiOrganization[]>('/Organizations');
+    return response.data.map(normalizeApiOrganization);
   },
 };
 

@@ -9,7 +9,7 @@ import { RelationshipAddModal } from "@/app/components/RelationshipAddModal";
 import { AttitudeControl } from "@/app/components/AttitudeControl";
 import { SaveIndicator } from "@/app/components/SaveIndicator";
 import { useAutoSave } from "@/hooks/useAutoSave";
-import { Trash2, Plus, Shield, User } from "lucide-react";
+import { Trash2, Plus, Shield, User, Building2 } from "lucide-react";
 
 interface EntityDetailPanelProps {
   entity: EntityItem | null;
@@ -129,7 +129,11 @@ function EditableRelationshipRow({
 
   const relatedName = relatedEntity?.name
     ?? `Entity #${relationship.npcId1 === currentEntityId ? relationship.npcId2 : relationship.npcId1}`;
-  const relatedLabel = relatedEntity?.entityType === 'npc' ? 'NPC' : 'Player Character';
+  const relatedLabel = relatedEntity?.entityType === 'npc'
+    ? 'NPC'
+    : relatedEntity?.entityType === 'organization'
+      ? 'Organization'
+      : 'Player Character';
 
   return (
     <div className="rounded-lg border border-border/50 bg-card/50 group p-2 space-y-2">
@@ -137,29 +141,35 @@ function EditableRelationshipRow({
       <div className="flex items-start gap-2">
         <div className="shrink-0 pt-0.5">
           {isTypeEditing ? (
-            <select
-              className="h-7 rounded border border-border/60 bg-background px-1.5 text-xs"
-              value={draft.type}
-              onChange={(event) => {
-                const nextDraft = { ...draft, type: event.target.value as Relationship['type'] };
-                updateDraft(nextDraft);
-                setIsTypeEditing(false);
-              }}
-              onBlur={() => setIsTypeEditing(false)}
-              autoFocus
-            >
-              {editableRelationshipTypes.map(type => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            relationship.isDerived ? null : (
+              <select
+                className="h-7 rounded border border-border/60 bg-background px-1.5 text-xs"
+                value={draft.type}
+                onChange={(event) => {
+                  const nextDraft = { ...draft, type: event.target.value as Relationship['type'] };
+                  updateDraft(nextDraft);
+                  setIsTypeEditing(false);
+                }}
+                onBlur={() => setIsTypeEditing(false)}
+                autoFocus
+              >
+                {editableRelationshipTypes.map(type => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            )
           ) : (
             <button
               type="button"
-              title="Click to change type"
-              onClick={() => setIsTypeEditing(true)}
-              className={`inline-flex h-auto items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors cursor-pointer hover:opacity-80 ${relationshipBadgeColors[draft.type] ?? relationshipBadgeColors.neutral}`}
+              title={relationship.isDerived ? 'Derived from faction membership' : 'Click to change type'}
+              onClick={() => {
+                if (!relationship.isDerived) {
+                  setIsTypeEditing(true);
+                }
+              }}
+              className={`inline-flex h-auto items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors ${relationship.isDerived ? 'cursor-default' : 'cursor-pointer hover:opacity-80'} ${relationshipBadgeColors[draft.type] ?? relationshipBadgeColors.neutral}`}
             >
               {draft.type}
             </button>
@@ -169,20 +179,22 @@ function EditableRelationshipRow({
           <p className="text-sm font-medium truncate">{relatedName}</p>
           <p className="text-xs text-muted-foreground">{relatedLabel}</p>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 hover:text-destructive"
-          onClick={() => onDeleteRelationship(relationship.id)}
-          aria-label="Delete relationship"
-        >
-          <Trash2 className="size-3" />
-        </Button>
+        {!relationship.isDerived && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 hover:text-destructive"
+            onClick={() => onDeleteRelationship(relationship.id)}
+            aria-label="Delete relationship"
+          >
+            <Trash2 className="size-3" />
+          </Button>
+        )}
       </div>
 
       {/* Row 2: description (click to edit) */}
       <div>
-        {isDescriptionEditing ? (
+        {!relationship.isDerived && isDescriptionEditing ? (
           <input
             className="h-7 w-full rounded border border-border/60 bg-background px-2 text-xs"
             value={draft.description}
@@ -195,37 +207,45 @@ function EditableRelationshipRow({
             autoFocus
           />
         ) : (
-          <button
-            type="button"
-            title="Click to edit description"
-            className="w-full text-left text-xs text-muted-foreground italic hover:text-foreground/80 transition-colors"
-            onClick={() => setIsDescriptionEditing(true)}
-          >
-            {draft.description || <span className="opacity-50">Add description…</span>}
-          </button>
+          relationship.isDerived ? (
+            <p className="text-xs text-muted-foreground italic">
+              {draft.description || 'Derived from faction membership.'}
+            </p>
+          ) : (
+            <button
+              type="button"
+              title="Click to edit description"
+              className="w-full text-left text-xs text-muted-foreground italic hover:text-foreground/80 transition-colors"
+              onClick={() => setIsDescriptionEditing(true)}
+            >
+              {draft.description || <span className="opacity-50">Add description…</span>}
+            </button>
+          )
         )}
       </div>
 
       {/* Row 3: attitude +/- controls + save indicator */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <AttitudeControl
-          score={draft.attitudeScore}
-          showErrorFlash={scoreErrorFlash}
-          onIncrement={() => {
-            const nextScore = clampAttitudeScore(draft.attitudeScore + 1);
-            if (nextScore !== draft.attitudeScore) {
-              updateDraft({ ...draft, attitudeScore: nextScore });
-            }
-          }}
-          onDecrement={() => {
-            const nextScore = clampAttitudeScore(draft.attitudeScore - 1);
-            if (nextScore !== draft.attitudeScore) {
-              updateDraft({ ...draft, attitudeScore: nextScore });
-            }
-          }}
-        />
-        <SaveIndicator status={autoSave.status} error={autoSave.error} onRetry={autoSave.retry} />
-      </div>
+      {!relationship.isDerived && (
+        <div className="flex items-center gap-3 flex-wrap">
+          <AttitudeControl
+            score={draft.attitudeScore}
+            showErrorFlash={scoreErrorFlash}
+            onIncrement={() => {
+              const nextScore = clampAttitudeScore(draft.attitudeScore + 1);
+              if (nextScore !== draft.attitudeScore) {
+                updateDraft({ ...draft, attitudeScore: nextScore });
+              }
+            }}
+            onDecrement={() => {
+              const nextScore = clampAttitudeScore(draft.attitudeScore - 1);
+              if (nextScore !== draft.attitudeScore) {
+                updateDraft({ ...draft, attitudeScore: nextScore });
+              }
+            }}
+          />
+          <SaveIndicator status={autoSave.status} error={autoSave.error} onRetry={autoSave.retry} />
+        </div>
+      )}
     </div>
   );
 }
@@ -237,7 +257,9 @@ const relationshipBadgeColors: Record<string, string> = {
   employer: 'bg-amber-600/20 text-amber-300 border-amber-600/30',
   enemy: 'bg-red-500/20 text-red-400 border-red-500/30',
   family: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  friend: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
   lover: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+  member: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
   mentor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   patron: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   rival: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
@@ -283,29 +305,41 @@ export function EntityDetailPanel({
   };
 
   const isNpc = entity.entityType === 'npc';
+  const isOrganization = entity.entityType === 'organization';
+  const canAddRelationships = !isOrganization;
+  const entityBadgeLabel = isNpc ? 'NPC' : isOrganization ? 'Organization' : 'PC';
+  const entityBadgeClassName = isNpc
+    ? 'text-xs border-primary/40 text-primary'
+    : isOrganization
+      ? 'text-xs border-sky-500/40 text-sky-300'
+      : 'text-xs border-green-500/40 text-green-400';
+  const entityIconContainerClassName = isNpc
+    ? 'bg-primary/20'
+    : isOrganization
+      ? 'bg-sky-500/20'
+      : 'bg-green-500/20';
+  const entityIcon = isNpc
+    ? <Shield className="size-5 text-primary" />
+    : isOrganization
+      ? <Building2 className="size-5 text-sky-300" />
+      : <User className="size-5 text-green-400" />;
 
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Entity header */}
       <div className="p-4 border-b border-primary/20">
         <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${isNpc ? 'bg-primary/20' : 'bg-green-500/20'}`}>
-            {isNpc
-              ? <Shield className="size-5 text-primary" />
-              : <User className="size-5 text-green-400" />
-            }
+          <div className={`p-2 rounded-lg ${entityIconContainerClassName}`}>
+            {entityIcon}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="font-bold text-lg leading-tight truncate">{entity.name}</h2>
               <Badge
                 variant="outline"
-                className={isNpc
-                  ? 'text-xs border-primary/40 text-primary'
-                  : 'text-xs border-green-500/40 text-green-400'
-                }
+                className={entityBadgeClassName}
               >
-                {isNpc ? 'NPC' : 'PC'}
+                {entityBadgeLabel}
               </Badge>
             </div>
             {isNpc && entity.lineage && entity.class && (
@@ -351,15 +385,17 @@ export function EntityDetailPanel({
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Relationships ({entityRelationships.length})
               </p>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setAddModalOpen(true)}
-                className="h-7 text-xs border-primary/30 hover:bg-primary/10 hover:text-primary"
-              >
-                <Plus className="size-3 mr-1" />
-                Add
-              </Button>
+              {canAddRelationships && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setAddModalOpen(true)}
+                  className="h-7 text-xs border-primary/30 hover:bg-primary/10 hover:text-primary"
+                >
+                  <Plus className="size-3 mr-1" />
+                  Add
+                </Button>
+              )}
             </div>
 
             {entityRelationships.length === 0 ? (

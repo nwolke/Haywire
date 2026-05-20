@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { NPC } from "@/types/npc";
+import { NPC, Relationship } from "@/types/npc";
 import { PC } from "@/types/pc";
-import { EntityItem } from "@/types/entity";
+import { EntityItem, EntityType } from "@/types/entity";
 import { useNPCData } from "@/hooks/useNPCData";
 import { usePCData } from "@/hooks/usePCData";
+import { useOrganizationData } from "@/hooks/useOrganizationData";
 import { useCampaignData } from "@/hooks/useCampaignData";
 import { EntityGraph } from "@/app/components/EntityGraph";
 import { EntityDetailPanel } from "@/app/components/EntityDetailPanel";
@@ -22,6 +23,7 @@ import {
   Search,
   Shield,
   User,
+  Building2,
   Plus,
   Pencil,
   Trash2,
@@ -34,6 +36,7 @@ const relationshipLegend: { type: string; color: string; label: string }[] = [
   { type: 'enemy', color: '#ef4444', label: 'Enemy' },
   { type: 'rival', color: '#f97316', label: 'Rival' },
   { type: 'family', color: '#a855f7', label: 'Family' },
+  { type: 'member', color: '#0ea5e9', label: 'Member' },
   { type: 'mentor', color: '#3b82f6', label: 'Mentor' },
   { type: 'patron', color: '#0ea5e9', label: 'Patron' },
   { type: 'employer', color: '#d97706', label: 'Employer' },
@@ -41,6 +44,13 @@ const relationshipLegend: { type: string; color: string; label: string }[] = [
   { type: 'vassal/follower', color: '#78716c', label: 'Vassal/Follower' },
   { type: 'neutral', color: '#6b7280', label: 'Other' },
 ];
+
+// Reserve distinct client-only ID bands for derived data:
+// - organizations start at -1,000,000
+// - membership relationships start at -2,000,000
+// This keeps them far away from backend-generated positive IDs and from each other.
+const SYNTHETIC_ORGANIZATION_ID_BASE = -1_000_000;
+const SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE = -2_000_000;
 
 export function CampaignPage() {
   const { id } = useParams<{ id: string }>();
@@ -74,10 +84,123 @@ export function CampaignPage() {
     deletePc,
   } = usePCData(campaignId);
 
-  const loading = npcLoading || pcLoading;
-  const error = [npcError, pcError].filter(Boolean).join('; ') || null;
+  const {
+    organizations,
+    loading: organizationLoading,
+    error: organizationError,
+    refreshOrganizations,
+  } = useOrganizationData();
 
-  // Entity list combining NPCs and PCs
+  const loading = npcLoading || pcLoading || organizationLoading;
+  const error = [npcError, pcError, organizationError].filter(Boolean).join('; ') || null;
+
+  const organizationEntities = useMemo<EntityItem[]>(() => {
+    const factionNamesByKey = new Map<string, string>();
+    npcs.forEach(npc => {
+      const factionName = npc.faction?.trim();
+      if (!factionName) {
+        return;
+      }
+
+      const factionKey = factionName.toLowerCase();
+      if (!factionNamesByKey.has(factionKey)) {
+        factionNamesByKey.set(factionKey, factionName);
+      }
+    });
+
+    const relationshipOrganizationIds = new Set<number>();
+    relationships.forEach(rel => {
+      if (rel.entityType1 === 'organization') {
+        relationshipOrganizationIds.add(rel.npcId1);
+      }
+      if (rel.entityType2 === 'organization') {
+        relationshipOrganizationIds.add(rel.npcId2);
+      }
+    });
+
+    const matchedFactionKeys = new Set<string>();
+    const realOrganizations = organizations
+      .filter(org => {
+        const key = org.name.trim().toLowerCase();
+        const matchesFaction = factionNamesByKey.has(key);
+        if (matchesFaction) {
+          matchedFactionKeys.add(key);
+        }
+
+        return matchesFaction || relationshipOrganizationIds.has(org.id);
+      })
+      .map((organization): EntityItem => ({
+        id: organization.id,
+        name: organization.name,
+        entityType: 'organization',
+        description: organization.description,
+      }));
+
+    const fallbackOrganizations = Array.from(factionNamesByKey.values())
+      .filter(name => !matchedFactionKeys.has(name.toLowerCase()))
+      .map((name, index): EntityItem => ({
+        id: SYNTHETIC_ORGANIZATION_ID_BASE - index,
+        name,
+        entityType: 'organization',
+        isSynthetic: true,
+      }));
+
+    return [...realOrganizations, ...fallbackOrganizations];
+  }, [npcs, organizations, relationships]);
+
+  const organizationEntityByName = useMemo(() => new Map(
+    organizationEntities.map(organization => [organization.name.trim().toLowerCase(), organization]),
+  ), [organizationEntities]);
+
+  const organizationMembershipRelationships = useMemo<Relationship[]>(() => {
+    const existingOrganizationRelationshipKeys = new Set(
+      relationships.flatMap(rel => {
+        if (rel.entityType1 === 'organization' && rel.entityType2 === 'npc') {
+          return [`npc-${rel.npcId2}-organization-${rel.npcId1}`];
+        }
+        if (rel.entityType1 === 'npc' && rel.entityType2 === 'organization') {
+          return [`npc-${rel.npcId1}-organization-${rel.npcId2}`];
+        }
+        return [];
+      }),
+    );
+
+    return npcs.flatMap((npc, index) => {
+      const factionName = npc.faction?.trim();
+      if (!factionName) {
+        return [];
+      }
+
+      const organization = organizationEntityByName.get(factionName.toLowerCase());
+      if (!organization) {
+        return [];
+      }
+
+      const relationshipKey = `npc-${npc.id}-organization-${organization.id}`;
+      if (existingOrganizationRelationshipKeys.has(relationshipKey)) {
+        return [];
+      }
+
+      return [{
+        id: SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE - index,
+        npcId1: npc.id,
+        npcId2: organization.id,
+        entityType1: 'npc',
+        entityType2: 'organization',
+        type: 'member',
+        description: `${npc.name} is part of ${organization.name}.`,
+        attitudeScore: 0,
+        campaignId: npc.campaignId,
+        isDerived: true,
+      }];
+    });
+  }, [npcs, organizationEntityByName, relationships]);
+
+  const allRelationships = useMemo(
+    () => [...relationships, ...organizationMembershipRelationships],
+    [organizationMembershipRelationships, relationships],
+  );
+
   const entities = useMemo<EntityItem[]>(() => [
     ...npcs.map((npc): EntityItem => ({
       id: npc.id,
@@ -97,13 +220,25 @@ export function CampaignPage() {
       description: pc.description,
       campaignId: pc.campaignId,
     })),
-  ], [npcs, pcs]);
+    ...organizationEntities,
+  ], [npcs, pcs, organizationEntities]);
 
-  const [selectedEntity, setSelectedEntity] = useState<EntityItem | null>(null);
+  const [selectedEntityKey, setSelectedEntityKey] = useState<{ id: number; entityType: EntityType } | null>(null);
   const [search, setSearch] = useState("");
   const [showNPCs, setShowNPCs] = useState(true);
   const [showPCs, setShowPCs] = useState(true);
+  const [showOrganizations, setShowOrganizations] = useState(true);
   const [activeCenterTab, setActiveCenterTab] = useState("graph");
+
+  const selectedEntity = useMemo(
+    () => selectedEntityKey
+      ? entities.find(entity => (
+        entity.id === selectedEntityKey.id &&
+        entity.entityType === selectedEntityKey.entityType
+      )) ?? null
+      : null,
+    [entities, selectedEntityKey],
+  );
 
   // NPC form state
   const [npcFormOpen, setNpcFormOpen] = useState(false);
@@ -145,6 +280,7 @@ export function CampaignPage() {
   const filteredEntities = entities.filter(e => {
     if (e.entityType === 'npc' && !showNPCs) return false;
     if (e.entityType === 'pc' && !showPCs) return false;
+    if (e.entityType === 'organization' && !showOrganizations) return false;
     if (search.trim()) {
       return e.name.toLowerCase().includes(search.toLowerCase());
     }
@@ -153,14 +289,14 @@ export function CampaignPage() {
 
   // Filter relationships to visible entities
   const visibleEntityKeys = new Set(filteredEntities.map(e => `${e.entityType}-${e.id}`));
-  const filteredRelationships = relationships.filter(rel => {
+  const filteredRelationships = allRelationships.filter(rel => {
     const k1 = `${rel.entityType1}-${rel.npcId1}`;
     const k2 = `${rel.entityType2}-${rel.npcId2}`;
     return visibleEntityKeys.has(k1) && visibleEntityKeys.has(k2);
   });
 
   const handleRefresh = async () => {
-    await Promise.all([refreshNpcs(), refreshPcs()]);
+    await Promise.all([refreshNpcs(), refreshPcs(), refreshOrganizations()]);
   };
 
   // NPC CRUD handlers
@@ -178,7 +314,7 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this NPC? All their relationships will also be removed.')) {
       await deleteNPC(id);
       if (selectedEntity?.entityType === 'npc' && selectedEntity?.id === id) {
-        setSelectedEntity(null);
+        setSelectedEntityKey(null);
       }
     }
   };
@@ -198,10 +334,15 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this character?')) {
       await deletePc(id);
       if (selectedEntity?.entityType === 'pc' && selectedEntity?.id === id) {
-        setSelectedEntity(null);
+        setSelectedEntityKey(null);
       }
     }
   };
+
+  const handleSaveNPC = useCallback(async (npcData: Omit<NPC, 'id'> | NPC) => {
+    await saveNPC(npcData);
+    await refreshOrganizations();
+  }, [refreshOrganizations, saveNPC]);
 
   // Handle edit/delete from the detail panel
   const handleEditEntity = () => {
@@ -209,7 +350,7 @@ export function CampaignPage() {
     if (selectedEntity.entityType === 'npc') {
       const npc = npcs.find(n => n.id === selectedEntity.id);
       if (npc) handleEditNPC(npc);
-    } else {
+    } else if (selectedEntity.entityType === 'pc') {
       const pc = pcs.find(p => p.id === selectedEntity.id);
       if (pc) handleEditPC(pc);
     }
@@ -219,7 +360,7 @@ export function CampaignPage() {
     if (!selectedEntity) return;
     if (selectedEntity.entityType === 'npc') {
       handleDeleteNPC(selectedEntity.id);
-    } else {
+    } else if (selectedEntity.entityType === 'pc') {
       handleDeletePC(selectedEntity.id);
     }
   };
@@ -310,6 +451,18 @@ export function CampaignPage() {
                 <User className="size-3 mr-1" />
                 PCs
               </Button>
+              <Button
+                size="sm"
+                variant={showOrganizations ? "default" : "outline"}
+                onClick={() => setShowOrganizations(v => !v)}
+                className={showOrganizations
+                  ? "bg-sky-600/80 hover:bg-sky-600/70 text-white"
+                  : "border-sky-500/30 text-sky-300 hover:bg-sky-500/10"
+                }
+              >
+                <Building2 className="size-3 mr-1" />
+                Orgs
+              </Button>
             </div>
           </div>
         </div>
@@ -358,7 +511,7 @@ export function CampaignPage() {
                     </div>
                   ) : filteredEntities.length === 0 ? (
                     <p className="text-xs text-muted-foreground text-center py-6 px-2">
-                      {search ? 'No entities match your search.' : 'No entities yet. Add NPCs or PCs to get started.'}
+                      {search ? 'No entities match your search.' : 'No entities yet. Add NPCs, PCs, or factions to get started.'}
                     </p>
                   ) : (
                     filteredEntities.map(entity => {
@@ -366,20 +519,24 @@ export function CampaignPage() {
                         selectedEntity?.id === entity.id &&
                         selectedEntity?.entityType === entity.entityType;
                       const isNpc = entity.entityType === 'npc';
+                      const isOrganization = entity.entityType === 'organization';
                       return (
                         <button
                           key={`${entity.entityType}-${entity.id}`}
-                          onClick={() => setSelectedEntity(isSelected ? null : entity)}
+                          onClick={() => setSelectedEntityKey(isSelected ? null : { id: entity.id, entityType: entity.entityType })}
                           className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors ${
                             isSelected
                               ? 'bg-primary/20 text-primary'
                               : 'hover:bg-primary/10 text-foreground'
                           }`}
                         >
-                          {isNpc
-                            ? <Shield className={`size-3.5 shrink-0 ${isSelected ? 'text-primary' : 'text-primary/60'}`} />
-                            : <User className={`size-3.5 shrink-0 ${isSelected ? 'text-green-400' : 'text-green-400/60'}`} />
-                          }
+                          {isNpc ? (
+                            <Shield className={`size-3.5 shrink-0 ${isSelected ? 'text-primary' : 'text-primary/60'}`} />
+                          ) : isOrganization ? (
+                            <Building2 className={`size-3.5 shrink-0 ${isSelected ? 'text-sky-300' : 'text-sky-300/60'}`} />
+                          ) : (
+                            <User className={`size-3.5 shrink-0 ${isSelected ? 'text-green-400' : 'text-green-400/60'}`} />
+                          )}
                           <span className="truncate">{entity.name}</span>
                         </button>
                       );
@@ -414,6 +571,8 @@ export function CampaignPage() {
                   <span>{npcs.length} NPCs</span>
                   <span>·</span>
                   <span>{pcs.length} PCs</span>
+                  <span>·</span>
+                  <span>{organizationEntities.length} Orgs</span>
                 </div>
               </div>
             </div>
@@ -437,8 +596,10 @@ export function CampaignPage() {
                       relationships={filteredRelationships}
                       selectedEntityId={selectedEntity?.id}
                       selectedEntityType={selectedEntity?.entityType}
-                      onNodeClick={entity => setSelectedEntity(prev =>
-                        prev?.id === entity.id && prev?.entityType === entity.entityType ? null : entity
+                      onNodeClick={entity => setSelectedEntityKey(prev =>
+                        prev?.id === entity.id && prev?.entityType === entity.entityType
+                          ? null
+                          : { id: entity.id, entityType: entity.entityType }
                       )}
                       width={canvasSize.width}
                       height={canvasSize.height}
@@ -467,11 +628,20 @@ export function CampaignPage() {
                       <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500/70 shrink-0" />
                       <span className="text-xs text-muted-foreground">PC</span>
                     </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-block w-2.5 h-2.5 rounded-full bg-sky-500/70 shrink-0" />
+                      <span className="text-xs text-muted-foreground">Organization</span>
+                    </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="analytics" className="flex-1 min-h-0">
-                  <CampaignAnalyticsPanel npcs={npcs} pcs={pcs} relationships={relationships} />
+                  <CampaignAnalyticsPanel
+                    npcs={npcs}
+                    pcs={pcs}
+                    organizations={organizationEntities}
+                    relationships={allRelationships}
+                  />
                 </TabsContent>
               </Tabs>
             </div>
@@ -481,7 +651,7 @@ export function CampaignPage() {
               <div className="flex-1 min-h-0">
                 <EntityDetailPanel
                   entity={selectedEntity}
-                  relationships={relationships}
+                  relationships={allRelationships}
                   allEntities={entities}
                   onAddRelationship={addRelationship}
                   onDeleteRelationship={deleteRelationship}
@@ -489,7 +659,7 @@ export function CampaignPage() {
                 />
               </div>
               {/* Edit/Delete actions for selected entity */}
-              {selectedEntity && (
+              {selectedEntity && selectedEntity.entityType !== 'organization' && (
                 <div className="p-3 border-t border-primary/20 flex gap-2">
                   <Button
                     size="sm"
@@ -520,7 +690,7 @@ export function CampaignPage() {
       <NPCForm
         open={npcFormOpen}
         onOpenChange={setNpcFormOpen}
-        onSave={saveNPC}
+        onSave={handleSaveNPC}
         editingNPC={editingNPC}
       />
       <PCForm

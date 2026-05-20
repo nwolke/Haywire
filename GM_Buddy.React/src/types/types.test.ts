@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { Campaign } from '@/types/campaign'
+import type { EntityItem } from '@/types/entity'
 import type { NPC, Relationship, RelationshipType } from '@/types/npc'
+import type { Organization } from '@/types/organization'
 
 describe('Type Definitions', () => {
   describe('Campaign', () => {
@@ -117,6 +119,42 @@ describe('Type Definitions', () => {
         }
         expect(relationship.type).toBe(type)
       })
+    })
+
+    it('should allow organization entity relationships', () => {
+      const relationship: Relationship = {
+        id: 9,
+        npcId1: 1,
+        npcId2: 5,
+        entityType1: 'npc',
+        entityType2: 'organization',
+        type: 'member',
+        attitudeScore: 0,
+        isDerived: true,
+      }
+
+      expect(relationship.entityType2).toBe('organization')
+      expect(relationship.type).toBe('member')
+      expect(relationship.isDerived).toBe(true)
+    })
+  })
+
+  describe('Organization', () => {
+    it('should allow valid organization objects and entity items', () => {
+      const organization: Organization = {
+        id: 7,
+        name: 'Guild',
+        description: 'A city guild',
+      }
+
+      const entity: EntityItem = {
+        id: organization.id,
+        name: organization.name,
+        entityType: 'organization',
+      }
+
+      expect(organization.name).toBe('Guild')
+      expect(entity.entityType).toBe('organization')
     })
   })
 })

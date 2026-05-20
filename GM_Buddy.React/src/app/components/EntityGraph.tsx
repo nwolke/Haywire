@@ -1,14 +1,14 @@
 import { useEffect, useRef, useMemo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 import { Relationship } from "@/types/npc";
-import { EntityItem } from "@/types/entity";
+import { EntityItem, EntityType } from "@/types/entity";
 import { Users } from "lucide-react";
 
 interface EntityGraphProps {
   entities: EntityItem[];
   relationships: Relationship[];
   selectedEntityId?: number | null;
-  selectedEntityType?: 'npc' | 'pc' | null;
+  selectedEntityType?: EntityType | null;
   onNodeClick?: (entity: EntityItem) => void;
   width?: number;
   height?: number;
@@ -21,7 +21,9 @@ const relationshipColors: Record<string, string> = {
   employer: '#d97706',
   enemy: '#ef4444',
   family: '#a855f7',
+  friend: '#34d399',
   lover: '#f43f5e',
+  member: '#0ea5e9',
   mentor: '#3b82f6',
   patron: '#0ea5e9',
   rival: '#f97316',
@@ -43,9 +45,52 @@ const PC_GLOW_COLOR = 'rgba(34, 197, 94, 0.6)';
 const PC_BORDER_COLOR = '#86efac';
 const PC_LABEL_COLOR = '#86efac';
 
+const ORGANIZATION_NODE_COLOR_INNER = '#60a5fa';
+const ORGANIZATION_NODE_COLOR_OUTER = '#3b82f6';
+const ORGANIZATION_GLOW_COLOR = 'rgba(59, 130, 246, 0.6)';
+const ORGANIZATION_BORDER_COLOR = '#93c5fd';
+const ORGANIZATION_LABEL_COLOR = '#93c5fd';
+
 const GRAPH_CHARGE_STRENGTH = -600;
 const GRAPH_LINK_DISTANCE = 200;
 const GRAPH_LINK_STRENGTH = 0.2;
+
+const escapeHtml = (value: string) => value
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
+const entityTypePalette: Record<EntityType, {
+  innerColor: string;
+  outerColor: string;
+  glowColor: string;
+  borderColor: string;
+  labelColor: string;
+}> = {
+  npc: {
+    innerColor: NPC_NODE_COLOR_INNER,
+    outerColor: NPC_NODE_COLOR_OUTER,
+    glowColor: NPC_GLOW_COLOR,
+    borderColor: NPC_BORDER_COLOR,
+    labelColor: NPC_LABEL_COLOR,
+  },
+  pc: {
+    innerColor: PC_NODE_COLOR_INNER,
+    outerColor: PC_NODE_COLOR_OUTER,
+    glowColor: PC_GLOW_COLOR,
+    borderColor: PC_BORDER_COLOR,
+    labelColor: PC_LABEL_COLOR,
+  },
+  organization: {
+    innerColor: ORGANIZATION_NODE_COLOR_INNER,
+    outerColor: ORGANIZATION_NODE_COLOR_OUTER,
+    glowColor: ORGANIZATION_GLOW_COLOR,
+    borderColor: ORGANIZATION_BORDER_COLOR,
+    labelColor: ORGANIZATION_LABEL_COLOR,
+  },
+};
 
 export function EntityGraph({
   entities,
@@ -66,7 +111,9 @@ export function EntityGraph({
       name: entity.name,
       subtitle: entity.entityType === 'npc'
         ? [entity.lineage, entity.class].filter(Boolean).join(' • ')
-        : 'Player Character',
+        : entity.entityType === 'pc'
+          ? 'Player Character'
+          : 'Organization',
       entity,
     }));
 
@@ -113,7 +160,7 @@ export function EntityGraph({
         <div className="text-center p-8">
           <Users className="size-16 mx-auto mb-4 text-primary/50" />
           <p className="text-muted-foreground text-lg">No entities to visualize yet.</p>
-          <p className="text-sm text-muted-foreground mt-2">Add NPCs and PCs to see the web!</p>
+          <p className="text-sm text-muted-foreground mt-2">Add NPCs, PCs, and organizations to see the web!</p>
         </div>
       </div>
     );
@@ -141,24 +188,25 @@ export function EntityGraph({
       <ForceGraph2D
         ref={graphRef}
         graphData={graphData}
-        nodeLabel={(node: any) => `
-          <div style="background: linear-gradient(135deg, #1a1333 0%, #2d1b4e 100%); padding: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3); border: 1px solid rgba(157, 78, 221, 0.3);">
-            <strong style="color: ${node.entityType === 'pc' ? '#4ade80' : '#9d4edd'}; font-size: 14px;">${node.name}</strong><br/>
-            <span style="color: #a099b8; font-size: 12px;">${node.subtitle}</span>
-          </div>
-        `}
+        nodeLabel={(node: any) => {
+          const safeName = escapeHtml(String(node.name ?? ''));
+          const safeSubtitle = escapeHtml(String(node.subtitle ?? ''));
+
+          return `
+            <div style="background: linear-gradient(135deg, #1a1333 0%, #2d1b4e 100%); padding: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3); border: 1px solid rgba(157, 78, 221, 0.3);">
+              <strong style="color: ${entityTypePalette[node.entityType as EntityType]?.outerColor ?? NPC_NODE_COLOR_OUTER}; font-size: 14px;">${safeName}</strong><br/>
+              <span style="color: #a099b8; font-size: 12px;">${safeSubtitle}</span>
+            </div>
+          `;
+        }}
         nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => { try {
           // Guard against non-finite values during early simulation ticks
           if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return;
           if (!Number.isFinite(globalScale) || globalScale === 0) return;
 
-          const isNpc = node.entityType === 'npc';
           const selected = isSelected(node);
-          const innerColor = isNpc ? NPC_NODE_COLOR_INNER : PC_NODE_COLOR_INNER;
-          const outerColor = isNpc ? NPC_NODE_COLOR_OUTER : PC_NODE_COLOR_OUTER;
-          const glowColor = isNpc ? NPC_GLOW_COLOR : PC_GLOW_COLOR;
-          const borderColor = isNpc ? NPC_BORDER_COLOR : PC_BORDER_COLOR;
-          const labelColor = isNpc ? NPC_LABEL_COLOR : PC_LABEL_COLOR;
+          const palette = entityTypePalette[node.entityType as EntityType] ?? entityTypePalette.npc;
+          const { innerColor, outerColor, glowColor, borderColor, labelColor } = palette;
 
           const label = node.name;
           const fontSize = 14 / globalScale;
@@ -211,7 +259,7 @@ export function EntityGraph({
           );
 
           // Label border
-          ctx.strokeStyle = selected ? outerColor : 'rgba(157, 78, 221, 0.5)';
+          ctx.strokeStyle = selected ? outerColor : borderColor;
           ctx.lineWidth = selected ? 1.5 / globalScale : 1 / globalScale;
           ctx.strokeRect(
             node.x - bckgDimensions[0] / 2,
