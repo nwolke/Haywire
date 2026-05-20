@@ -55,6 +55,13 @@ const GRAPH_CHARGE_STRENGTH = -600;
 const GRAPH_LINK_DISTANCE = 200;
 const GRAPH_LINK_STRENGTH = 0.2;
 
+const escapeHtml = (value: string) => value
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
 const entityTypePalette: Record<EntityType, {
   innerColor: string;
   outerColor: string;
@@ -181,12 +188,17 @@ export function EntityGraph({
       <ForceGraph2D
         ref={graphRef}
         graphData={graphData}
-        nodeLabel={(node: any) => `
-          <div style="background: linear-gradient(135deg, #1a1333 0%, #2d1b4e 100%); padding: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3); border: 1px solid rgba(157, 78, 221, 0.3);">
-            <strong style="color: ${entityTypePalette[node.entityType as EntityType]?.outerColor ?? NPC_NODE_COLOR_OUTER}; font-size: 14px;">${node.name}</strong><br/>
-            <span style="color: #a099b8; font-size: 12px;">${node.subtitle}</span>
-          </div>
-        `}
+        nodeLabel={(node: any) => {
+          const safeName = escapeHtml(String(node.name ?? ''));
+          const safeSubtitle = escapeHtml(String(node.subtitle ?? ''));
+
+          return `
+            <div style="background: linear-gradient(135deg, #1a1333 0%, #2d1b4e 100%); padding: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3); border: 1px solid rgba(157, 78, 221, 0.3);">
+              <strong style="color: ${entityTypePalette[node.entityType as EntityType]?.outerColor ?? NPC_NODE_COLOR_OUTER}; font-size: 14px;">${safeName}</strong><br/>
+              <span style="color: #a099b8; font-size: 12px;">${safeSubtitle}</span>
+            </div>
+          `;
+        }}
         nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => { try {
           // Guard against non-finite values during early simulation ticks
           if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return;

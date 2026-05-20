@@ -73,7 +73,7 @@ export function RelationshipAddModal({
 
   const npcsAvailable = availableEntities.filter(e => e.entityType === 'npc');
   const pcsAvailable = availableEntities.filter(e => e.entityType === 'pc');
-  const selectableEntityCount = npcsAvailable.length + pcsAvailable.length;
+  const selectableNpcAndPcCount = npcsAvailable.length + pcsAvailable.length;
 
   const handleAdd = async () => {
     if (!targetId) return;
@@ -152,7 +152,7 @@ export function RelationshipAddModal({
                     ))}
                   </>
                 )}
-                {selectableEntityCount === 0 && (
+                {selectableNpcAndPcCount === 0 && (
                   <div className="px-2 py-3 text-sm text-muted-foreground text-center">
                     All entities are already connected.
                   </div>
@@ -242,7 +242,7 @@ export function RelationshipAddModal({
           </Button>
           <Button
             onClick={handleAdd}
-            disabled={!targetId || saving || selectableEntityCount === 0}
+            disabled={!targetId || saving || selectableNpcAndPcCount === 0}
             className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
           >
             {saving ? 'Adding...' : 'Add Relationship'}

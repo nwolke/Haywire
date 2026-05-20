@@ -45,8 +45,10 @@ const relationshipLegend: { type: string; color: string; label: string }[] = [
   { type: 'neutral', color: '#6b7280', label: 'Other' },
 ];
 
-// Use large negative ranges for derived client-only IDs so they stay clearly separated
-// from backend-generated positive entity/relationship IDs.
+// Reserve distinct client-only ID bands for derived data:
+// - organizations start at -1,000,000
+// - membership relationships start at -2,000,000
+// This keeps them far away from backend-generated positive IDs and from each other.
 const SYNTHETIC_ORGANIZATION_ID_BASE = -1_000_000;
 const SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE = -2_000_000;
 
@@ -134,17 +136,14 @@ export function CampaignPage() {
         description: organization.description,
       }));
 
-    const fallbackOrganizations = Array.from(factionNamesByKey.entries())
-      .filter(([key]) => !matchedFactionKeys.has(key))
-      .map(([factionKey, name], index): EntityItem => {
-        void factionKey;
-        return {
-          id: SYNTHETIC_ORGANIZATION_ID_BASE - index,
-          name,
-          entityType: 'organization',
-          isSynthetic: true,
-        };
-      });
+    const fallbackOrganizations = Array.from(factionNamesByKey.values())
+      .filter(name => !matchedFactionKeys.has(name.toLowerCase()))
+      .map((name, index): EntityItem => ({
+        id: SYNTHETIC_ORGANIZATION_ID_BASE - index,
+        name,
+        entityType: 'organization',
+        isSynthetic: true,
+      }));
 
     return [...realOrganizations, ...fallbackOrganizations];
   }, [npcs, organizations, relationships]);
