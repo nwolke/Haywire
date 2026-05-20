@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { NPC, Relationship } from "@/types/npc";
 import { PC } from "@/types/pc";
-import { EntityItem } from "@/types/entity";
+import { EntityItem, EntityType } from "@/types/entity";
 import { useNPCData } from "@/hooks/useNPCData";
 import { usePCData } from "@/hooks/usePCData";
 import { useOrganizationData } from "@/hooks/useOrganizationData";
@@ -223,12 +223,22 @@ export function CampaignPage() {
     ...organizationEntities,
   ], [npcs, pcs, organizationEntities]);
 
-  const [selectedEntity, setSelectedEntity] = useState<EntityItem | null>(null);
+  const [selectedEntityKey, setSelectedEntityKey] = useState<{ id: number; entityType: EntityType } | null>(null);
   const [search, setSearch] = useState("");
   const [showNPCs, setShowNPCs] = useState(true);
   const [showPCs, setShowPCs] = useState(true);
   const [showOrganizations, setShowOrganizations] = useState(true);
   const [activeCenterTab, setActiveCenterTab] = useState("graph");
+
+  const selectedEntity = useMemo(
+    () => selectedEntityKey
+      ? entities.find(entity => (
+        entity.id === selectedEntityKey.id &&
+        entity.entityType === selectedEntityKey.entityType
+      )) ?? null
+      : null,
+    [entities, selectedEntityKey],
+  );
 
   // NPC form state
   const [npcFormOpen, setNpcFormOpen] = useState(false);
@@ -304,7 +314,7 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this NPC? All their relationships will also be removed.')) {
       await deleteNPC(id);
       if (selectedEntity?.entityType === 'npc' && selectedEntity?.id === id) {
-        setSelectedEntity(null);
+        setSelectedEntityKey(null);
       }
     }
   };
@@ -324,10 +334,15 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this character?')) {
       await deletePc(id);
       if (selectedEntity?.entityType === 'pc' && selectedEntity?.id === id) {
-        setSelectedEntity(null);
+        setSelectedEntityKey(null);
       }
     }
   };
+
+  const handleSaveNPC = useCallback(async (npcData: Omit<NPC, 'id'> | NPC) => {
+    await saveNPC(npcData);
+    await refreshOrganizations();
+  }, [refreshOrganizations, saveNPC]);
 
   // Handle edit/delete from the detail panel
   const handleEditEntity = () => {
@@ -508,7 +523,7 @@ export function CampaignPage() {
                       return (
                         <button
                           key={`${entity.entityType}-${entity.id}`}
-                          onClick={() => setSelectedEntity(isSelected ? null : entity)}
+                          onClick={() => setSelectedEntityKey(isSelected ? null : { id: entity.id, entityType: entity.entityType })}
                           className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors ${
                             isSelected
                               ? 'bg-primary/20 text-primary'
@@ -581,8 +596,10 @@ export function CampaignPage() {
                       relationships={filteredRelationships}
                       selectedEntityId={selectedEntity?.id}
                       selectedEntityType={selectedEntity?.entityType}
-                      onNodeClick={entity => setSelectedEntity(prev =>
-                        prev?.id === entity.id && prev?.entityType === entity.entityType ? null : entity
+                      onNodeClick={entity => setSelectedEntityKey(prev =>
+                        prev?.id === entity.id && prev?.entityType === entity.entityType
+                          ? null
+                          : { id: entity.id, entityType: entity.entityType }
                       )}
                       width={canvasSize.width}
                       height={canvasSize.height}
@@ -673,7 +690,7 @@ export function CampaignPage() {
       <NPCForm
         open={npcFormOpen}
         onOpenChange={setNpcFormOpen}
-        onSave={saveNPC}
+        onSave={handleSaveNPC}
         editingNPC={editingNPC}
       />
       <PCForm
