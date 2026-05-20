@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { NPC, Relationship } from "@/types/npc";
 import { PC } from "@/types/pc";
+import { EntityItem } from "@/types/entity";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/app/components/ui/card";
 import { Badge } from "@/app/components/ui/badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/app/components/ui/chart";
@@ -9,6 +10,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 interface CampaignAnalyticsPanelProps {
   npcs: NPC[];
   pcs: PC[];
+  organizations: EntityItem[];
   relationships: Relationship[];
 }
 
@@ -57,17 +59,10 @@ const formatRelationshipTypeLabel = (type: string) =>
 export function CampaignAnalyticsPanel({
   npcs,
   pcs,
+  organizations,
   relationships,
 }: CampaignAnalyticsPanelProps) {
-  const totalOrganizations = useMemo(
-    () =>
-      new Set(
-        npcs
-          .map(npc => npc.faction?.trim())
-          .filter((faction): faction is string => Boolean(faction)),
-      ).size,
-    [npcs],
-  );
+  const totalOrganizations = organizations.length;
 
   const relationshipTypeData = useMemo(() => {
     const counts = new Map<string, number>();
@@ -103,6 +98,7 @@ export function CampaignAnalyticsPanel({
     const entityNameByKey = new Map<string, string>();
     npcs.forEach(npc => entityNameByKey.set(`npc-${npc.id}`, npc.name));
     pcs.forEach(pc => entityNameByKey.set(`pc-${pc.id}`, pc.name));
+    organizations.forEach(organization => entityNameByKey.set(`organization-${organization.id}`, organization.name));
 
     const counts = new Map<string, number>();
     entityNameByKey.forEach((_, key) => counts.set(key, 0));
@@ -133,7 +129,7 @@ export function CampaignAnalyticsPanel({
     });
 
     return topEntity;
-  }, [npcs, pcs, relationships]);
+  }, [npcs, pcs, organizations, relationships]);
 
   return (
     <div className="h-full min-h-0 overflow-auto pr-1">

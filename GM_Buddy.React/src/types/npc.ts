@@ -1,3 +1,5 @@
+import type { EntityType } from './entity';
+
 export interface NPC {
   id: number;
   name: string;
@@ -14,22 +16,25 @@ export interface Relationship {
   id: number;
   npcId1: number;
   npcId2: number;
-  entityType1: 'npc' | 'pc';
-  entityType2: 'npc' | 'pc';
+  entityType1: EntityType;
+  entityType2: EntityType;
   type: RelationshipType;
   description?: string;
   attitudeScore: number;
   campaignId?: number;
+  isDerived?: boolean;
 }
 
 export type RelationshipType =
   | 'acquaintance'
   | 'ally'
+  | 'friend'
   | 'contact/informant'
   | 'employer'
   | 'enemy'
   | 'family'
   | 'lover'
+  | 'member'
   | 'mentor'
   | 'patron'
   | 'rival'

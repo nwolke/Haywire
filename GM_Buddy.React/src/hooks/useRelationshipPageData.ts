@@ -3,6 +3,7 @@ import { NPC, Relationship } from '@/types/npc';
 import { PC } from '@/types/pc';
 import { useNPCData } from './useNPCData';
 import { usePCData } from './usePCData';
+import { useOrganizationData } from './useOrganizationData';
 
 // Re-export from canonical location for backward compatibility
 export type { EntityType, EntityItem } from '@/types/entity';
@@ -11,6 +12,7 @@ import type { EntityItem } from '@/types/entity';
 export interface UseRelationshipPageDataReturn {
   npcs: NPC[];
   pcs: PC[];
+  organizations: EntityItem[];
   entities: EntityItem[];
   relationships: Relationship[];
   loading: boolean;
@@ -42,8 +44,15 @@ export function useRelationshipPageData(): UseRelationshipPageDataReturn {
     refreshPcs,
   } = usePCData(selectedCampaignId);
 
-  const loading = npcLoading || pcLoading;
-  const error = npcError ?? pcError;
+  const {
+    organizations,
+    loading: organizationLoading,
+    error: organizationError,
+    refreshOrganizations,
+  } = useOrganizationData();
+
+  const loading = npcLoading || pcLoading || organizationLoading;
+  const error = npcError ?? pcError ?? organizationError;
 
   const entities = useMemo<EntityItem[]>(() => [
     ...npcs.map((npc): EntityItem => ({
@@ -63,11 +72,17 @@ export function useRelationshipPageData(): UseRelationshipPageDataReturn {
       entityType: 'pc',
       description: pc.description,
     })),
-  ], [npcs, pcs]);
+    ...organizations.map((organization): EntityItem => ({
+      id: organization.id,
+      name: organization.name,
+      entityType: 'organization',
+      description: organization.description,
+    })),
+  ], [npcs, organizations, pcs]);
 
   const refresh = useCallback(async () => {
-    await Promise.all([refreshNpcs(), refreshPcs()]);
-  }, [refreshNpcs, refreshPcs]);
+    await Promise.all([refreshNpcs(), refreshPcs(), refreshOrganizations()]);
+  }, [refreshNpcs, refreshOrganizations, refreshPcs]);
 
   const addRelationship = useCallback(async (relationship: Omit<Relationship, 'id'>) => {
     await addRelationshipFromNpcHook(relationship);
@@ -76,6 +91,7 @@ export function useRelationshipPageData(): UseRelationshipPageDataReturn {
   return {
     npcs,
     pcs,
+    organizations: entities.filter(entity => entity.entityType === 'organization'),
     entities,
     relationships,
     loading,

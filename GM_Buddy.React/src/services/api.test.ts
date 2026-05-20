@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import apiClient, { relationshipApi, transformApiRelationshipToRelationship } from './api';
+import apiClient, { relationshipApi, transformApiRelationshipToRelationship, organizationApi } from './api';
 import * as cognito from './cognito';
 
 // Mock the cognito service
@@ -299,5 +299,47 @@ describe('API Service - relationship type mapping', () => {
     });
 
     expect(transformed.type).toBe('ally');
+  });
+
+  it('preserves organization entity types from the API', () => {
+    const transformed = transformApiRelationshipToRelationship({
+      relationship_id: 6,
+      source_entity_type: 'organization',
+      source_entity_id: 33,
+      target_entity_type: 'npc',
+      target_entity_id: 21,
+      relationship_type_name: 'Member',
+      attitude_score: 0,
+    });
+
+    expect(transformed.entityType1).toBe('organization');
+    expect(transformed.entityType2).toBe('npc');
+    expect(transformed.type).toBe('member');
+  });
+});
+
+describe('API Service - organization mapping', () => {
+  let mockAxios: MockAdapter;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockAxios = new MockAdapter(apiClient);
+  });
+
+  afterEach(() => {
+    mockAxios.restore();
+  });
+
+  it('maps organization responses from /Organizations', async () => {
+    vi.mocked(cognito.getIdToken).mockResolvedValue('valid-token');
+    mockAxios.onGet('/Organizations').reply(200, [
+      { organization_id: 9, name: 'Guild', description: 'City guild' },
+    ]);
+
+    const organizations = await organizationApi.getOrganizations();
+
+    expect(organizations).toEqual([
+      { id: 9, name: 'Guild', description: 'City guild' },
+    ]);
   });
 });

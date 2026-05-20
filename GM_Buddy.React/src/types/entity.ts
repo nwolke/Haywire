@@ -1,4 +1,4 @@
-export type EntityType = 'npc' | 'pc';
+export type EntityType = 'npc' | 'pc' | 'organization';
 
 export interface EntityItem {
   id: number;
@@ -13,4 +13,6 @@ export interface EntityItem {
   campaignId?: number;
   // PC-specific
   // description and campaignId also apply
+  // Derived entities/relationships
+  isSynthetic?: boolean;
 }
