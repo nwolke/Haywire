@@ -1,0 +1,1553 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-05-27T22:00:37.12879Z",
+  "analysisEndTime": "2026-05-27T22:00:38.7685725Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 9,
+      "issues": 7,
+      "incidents": 48,
+      "effort": 48
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 12,
+        "Optional": 6,
+        "Potential": 30,
+        "Information": 0
+      },
+      "category": {
+        "Project": 9,
+        "NuGet": 16,
+        "Api": 23
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 4,
+      "properties": {
+        "appName": "HaywireGM.AppHost",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 47,
+        "linesOfCode": 47,
+        "totalApiScanned": 177,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "2bac480e-7685-424a-b005-6e5ebc4ec0d9",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.3.5",
+              "protected": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.3.5"
+            },
+            "kind": "File",
+            "path": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+            "snippet": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.3.5",
+            "protectedSnippet": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.3.5",
+            "label": "Aspire.Hosting.PostgreSQL 9.1.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.PostgreSQL",
+              "PackageVersion": "9.1.0",
+              "PackageNewVersion": "13.3.5",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "47d86b34-bc66-4556-8934-7d80d14f44ab",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.NodeJS, 9.5.2\n\nRecommendation:\n\nThis package has been renamed to Aspire.Hosting.JavaScript going forward.\nRemove Aspire.Hosting.NodeJS, and replace with new package Aspire.Hosting.NodeJS, 9.5.2",
+              "protected": "Aspire.Hosting.NodeJS, 9.5.2\n\nRecommendation:\n\nThis package has been renamed to Aspire.Hosting.JavaScript going forward.\nRemove Aspire.Hosting.NodeJS, and replace with new package Aspire.Hosting.NodeJS, 9.5.2"
+            },
+            "kind": "File",
+            "path": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+            "snippet": "Aspire.Hosting.NodeJS, 9.5.2\n\nRecommendation:\n\nThis package has been renamed to Aspire.Hosting.JavaScript going forward.\nRemove Aspire.Hosting.NodeJS, and replace with new package Aspire.Hosting.NodeJS, 9.5.2",
+            "protectedSnippet": "Aspire.Hosting.NodeJS, 9.5.2\n\nRecommendation:\n\nThis package has been renamed to Aspire.Hosting.JavaScript going forward.\nRemove Aspire.Hosting.NodeJS, and replace with new package Aspire.Hosting.NodeJS, 9.5.2",
+            "label": "Aspire.Hosting.NodeJS 9.5.2",
+            "properties": {
+              "PackageId": "Aspire.Hosting.NodeJS",
+              "PackageVersion": "9.5.2",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a0055e08-0e21-4a8b-b500-02f90aa335f1",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.3.5",
+              "protected": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.3.5"
+            },
+            "kind": "File",
+            "path": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+            "snippet": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.3.5",
+            "protectedSnippet": "Aspire.Hosting.PostgreSQL, 9.1.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.3.5",
+            "label": "Aspire.Hosting.PostgreSQL 9.1.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.PostgreSQL",
+              "PackageVersion": "9.1.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "13c76c27-4596-4144-8818-e2ef15e12771",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.AppHost\\HaywireGM.AppHost.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 5,
+      "properties": {
+        "appName": "HaywireGM.Business.ComponentTests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 2312,
+        "linesOfCode": 529,
+        "totalApiScanned": 567,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "fea85538-a764-4eb4-adc4-893deb0e8dfd",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Logging.Abstractions, 10.0.2\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+              "protected": "Microsoft.Extensions.Logging.Abstractions, 10.0.2\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+            "snippet": "Microsoft.Extensions.Logging.Abstractions, 10.0.2\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Logging.Abstractions, 10.0.2\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+            "label": "Microsoft.Extensions.Logging.Abstractions 10.0.2",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Logging.Abstractions",
+              "PackageVersion": "10.0.2",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6e49f484-3518-41a2-ac04-90fe4cececce",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "SpecFlow.Tools.MsBuild.Generation, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.Tools.MsBuild.Generation, and replace with new package SpecFlow.Tools.MsBuild.Generation, 3.9.74",
+              "protected": "SpecFlow.Tools.MsBuild.Generation, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.Tools.MsBuild.Generation, and replace with new package SpecFlow.Tools.MsBuild.Generation, 3.9.74"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+            "snippet": "SpecFlow.Tools.MsBuild.Generation, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.Tools.MsBuild.Generation, and replace with new package SpecFlow.Tools.MsBuild.Generation, 3.9.74",
+            "protectedSnippet": "SpecFlow.Tools.MsBuild.Generation, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.Tools.MsBuild.Generation, and replace with new package SpecFlow.Tools.MsBuild.Generation, 3.9.74",
+            "label": "SpecFlow.Tools.MsBuild.Generation 3.9.74",
+            "properties": {
+              "PackageId": "SpecFlow.Tools.MsBuild.Generation",
+              "PackageVersion": "3.9.74",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "e0ebaf0b-e09e-4f7f-ba11-8151fe1702e2",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "SpecFlow.xUnit, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.xUnit, and replace with new package SpecFlow.xUnit, 3.9.74",
+              "protected": "SpecFlow.xUnit, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.xUnit, and replace with new package SpecFlow.xUnit, 3.9.74"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+            "snippet": "SpecFlow.xUnit, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.xUnit, and replace with new package SpecFlow.xUnit, 3.9.74",
+            "protectedSnippet": "SpecFlow.xUnit, 3.9.74\n\nRecommendation:\n\nShould be replaced.\nRemove SpecFlow.xUnit, and replace with new package SpecFlow.xUnit, 3.9.74",
+            "label": "SpecFlow.xUnit 3.9.74",
+            "properties": {
+              "PackageId": "SpecFlow.xUnit",
+              "PackageVersion": "3.9.74",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "eb59b85b-ad8f-4a09-9237-83080a0d1c96",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit, 2.9.2\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+              "protected": "xunit, 2.9.2\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+            "snippet": "xunit, 2.9.2\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "protectedSnippet": "xunit, 2.9.2\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "label": "xunit 2.9.2",
+            "properties": {
+              "PackageId": "xunit",
+              "PackageVersion": "2.9.2",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d824a45e-4c73-4374-9bb4-4ef977ac9bcc",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.ComponentTests\\HaywireGM.Business.ComponentTests.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Business\\HaywireGM.Business.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "HaywireGM.Business",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 9,
+        "numberOfCodeFiles": 9,
+        "linesTotal": 732,
+        "linesOfCode": 732,
+        "totalApiScanned": 908,
+        "minLinesOfCodeToChange": 1,
+        "maxLinesOfCodeToChange": 1
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "a9cfcb5f-ebed-4072-a68a-536c3dd3d7d6",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Business\\HaywireGM.Business.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business\\HaywireGM.Business.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "59ac7d64-11f1-4e86-9da5-9ecb1c50bb39",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: C# overload resolution prefers \u0060params\u0060 span-type overloads ",
+          "projectPath": "HaywireGM.Business\\HaywireGM.Business.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "await Task.WhenAll(campaignsTask, npcsTask, pcsTask, organizationsTask, relationshipsTask);",
+              "protected": "M:System.Threading.Tasks.Task.WhenAll(System.ReadOnlySpan{System.Threading.Tasks.Task})"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business\\AccountLogic.cs",
+            "snippet": "await Task.WhenAll(campaignsTask, npcsTask, pcsTask, organizationsTask, relationshipsTask);",
+            "protectedSnippet": "M:System.Threading.Tasks.Task.WhenAll(System.ReadOnlySpan{System.Threading.Tasks.Task})",
+            "label": "M:System.Threading.Tasks.Task.WhenAll(System.ReadOnlySpan{System.Threading.Tasks.Task})",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/params-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 78,
+            "column": 8
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 7,
+      "properties": {
+        "appName": "HaywireGM.Business.UnitTests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 20,
+        "numberOfCodeFiles": 18,
+        "linesTotal": 6503,
+        "linesOfCode": 3893,
+        "totalApiScanned": 4071,
+        "minLinesOfCodeToChange": 4,
+        "maxLinesOfCodeToChange": 4
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "9c634076-7089-40e7-bd6d-9d7f8bc0b934",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Logging.Abstractions, 9.0.10\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+              "protected": "Microsoft.Extensions.Logging.Abstractions, 9.0.10\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+            "snippet": "Microsoft.Extensions.Logging.Abstractions, 9.0.10\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Logging.Abstractions, 9.0.10\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Abstractions, and replace with new package Microsoft.Extensions.Logging.Abstractions 10.0.8",
+            "label": "Microsoft.Extensions.Logging.Abstractions 9.0.10",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Logging.Abstractions",
+              "PackageVersion": "9.0.10",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "36d3e66b-4bd2-4f97-9608-cfda59cb87ed",
+          "ruleId": "NuGet.0005",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+              "protected": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+            "snippet": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "protectedSnippet": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "label": "xunit 2.9.3",
+            "properties": {
+              "PackageId": "xunit",
+              "PackageVersion": "2.9.3",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6a1b9c66-3047-49c1-8a4a-d124b805cabd",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "2807141e-3aa1-436b-89f4-eabfa9b6f05c",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\AccountLogicTests.cs",
+            "snippet": "var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 192,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "e111d16e-26eb-4e7f-8958-dd1273894e3e",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\AccountLogicTests.cs",
+            "snippet": "var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 192,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "359b51cd-a672-4403-b258-33de463dee96",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\AccountLogicTests.cs",
+            "snippet": "var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 115,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "212bcefb-485e-44af-9533-eac1afe60306",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HaywireGM.Business.UnitTests\\HaywireGM.Business.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Business.UnitTests\\AccountLogicTests.cs",
+            "snippet": "var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 115,
+            "column": 8
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Contracts\\HaywireGM.Contracts.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "HaywireGM.Contracts",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 29,
+        "numberOfCodeFiles": 29,
+        "linesTotal": 923,
+        "linesOfCode": 923,
+        "totalApiScanned": 722,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "87e728f9-2c33-41db-b0f1-aa16705e0ed2",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Contracts\\HaywireGM.Contracts.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.8",
+              "protected": "Microsoft.EntityFrameworkCore, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Contracts\\HaywireGM.Contracts.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.8",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.8",
+            "label": "Microsoft.EntityFrameworkCore 9.0.2",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore",
+              "PackageVersion": "9.0.2",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "61aad1a0-d7a6-41fb-8361-5b67824befb8",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Contracts\\HaywireGM.Contracts.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Contracts\\HaywireGM.Contracts.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Data\\HaywireGM.Data.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "HaywireGM.Data",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 7,
+        "numberOfCodeFiles": 7,
+        "linesTotal": 1117,
+        "linesOfCode": 1117,
+        "totalApiScanned": 638,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "a27ba1f9-a9d2-4635-b1ae-c35a426186b8",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Data\\HaywireGM.Data.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.Abstractions, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.8",
+              "protected": "Microsoft.Extensions.Configuration.Abstractions, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Data\\HaywireGM.Data.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.Abstractions, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.Abstractions, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.8",
+            "label": "Microsoft.Extensions.Configuration.Abstractions 9.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.Abstractions",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "fa8b219c-4f8e-4606-a201-adfbae9bfd9d",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Data\\HaywireGM.Data.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Data\\HaywireGM.Data.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.React\\HaywireGM.React.esproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "HaywireGM.React",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net472"
+        ],
+        "languages": [
+          ""
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 0,
+        "numberOfCodeFiles": 0,
+        "linesTotal": 0,
+        "linesOfCode": 0,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "b452d872-8f56-4783-9518-0993c563f77b",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.React\\HaywireGM.React.esproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: .NETFramework,Version=v4.7.2\nRecommended target framework: net10.0",
+              "protected": "Current target framework: .NETFramework,Version=v4.7.2\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.React\\HaywireGM.React.esproj",
+            "snippet": "Current target framework: .NETFramework,Version=v4.7.2\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: .NETFramework,Version=v4.7.2\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": ".NETFramework,Version=v4.7.2",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+      "startingProject": true,
+      "issues": 6,
+      "storyPoints": 24,
+      "properties": {
+        "appName": "HaywireGM.Server",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 13,
+        "numberOfCodeFiles": 11,
+        "linesTotal": 2011,
+        "linesOfCode": 1976,
+        "totalApiScanned": 2089,
+        "minLinesOfCodeToChange": 18,
+        "maxLinesOfCodeToChange": 18
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "5739a99a-ed51-4100-a271-7f628495be9a",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+              "protected": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+            "label": "Microsoft.AspNetCore.Authentication.JwtBearer 9.0.3",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageVersion": "9.0.3",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "50b6f9fb-3f87-4c14-a8c3-d9884096b1e4",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.ApiDescription.Client, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.Extensions.ApiDescription.Client, and replace with new package Microsoft.Extensions.ApiDescription.Client 10.0.8",
+              "protected": "Microsoft.Extensions.ApiDescription.Client, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.Extensions.ApiDescription.Client, and replace with new package Microsoft.Extensions.ApiDescription.Client 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "Microsoft.Extensions.ApiDescription.Client, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.Extensions.ApiDescription.Client, and replace with new package Microsoft.Extensions.ApiDescription.Client 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.ApiDescription.Client, 9.0.3\n\nRecommendation:\n\nRemove Microsoft.Extensions.ApiDescription.Client, and replace with new package Microsoft.Extensions.ApiDescription.Client 10.0.8",
+            "label": "Microsoft.Extensions.ApiDescription.Client 9.0.3",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.ApiDescription.Client",
+              "PackageVersion": "9.0.3",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "267f1632-d2ab-44f2-b798-cfef8dde8e63",
+          "ruleId": "NuGet.0001",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.2\n\nRecommendation:\n\nNo supported version found",
+              "protected": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.2\n\nRecommendation:\n\nNo supported version found"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.2\n\nRecommendation:\n\nNo supported version found",
+            "protectedSnippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.2\n\nRecommendation:\n\nNo supported version found",
+            "label": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.21.2",
+            "properties": {
+              "PackageId": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets",
+              "PackageVersion": "1.21.2",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "de252a70-9fdc-49c2-98ba-1148a2d7147a",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Newtonsoft.Json, 13.0.3\n\nRecommendation:\n\nRemove Newtonsoft.Json, and replace with new package Newtonsoft.Json 13.0.4",
+              "protected": "Newtonsoft.Json, 13.0.3\n\nRecommendation:\n\nRemove Newtonsoft.Json, and replace with new package Newtonsoft.Json 13.0.4"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "Newtonsoft.Json, 13.0.3\n\nRecommendation:\n\nRemove Newtonsoft.Json, and replace with new package Newtonsoft.Json 13.0.4",
+            "protectedSnippet": "Newtonsoft.Json, 13.0.3\n\nRecommendation:\n\nRemove Newtonsoft.Json, and replace with new package Newtonsoft.Json 13.0.4",
+            "label": "Newtonsoft.Json 13.0.3",
+            "properties": {
+              "PackageId": "Newtonsoft.Json",
+              "PackageVersion": "13.0.3",
+              "PackageNewVersion": "13.0.4",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "74dac60b-b7d0-4890-9114-36e06bd7812b",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.Configuration.ConfigurationManager, 9.0.3\n\nRecommendation:\n\nRemove System.Configuration.ConfigurationManager, and replace with new package System.Configuration.ConfigurationManager 10.0.8",
+              "protected": "System.Configuration.ConfigurationManager, 9.0.3\n\nRecommendation:\n\nRemove System.Configuration.ConfigurationManager, and replace with new package System.Configuration.ConfigurationManager 10.0.8"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "System.Configuration.ConfigurationManager, 9.0.3\n\nRecommendation:\n\nRemove System.Configuration.ConfigurationManager, and replace with new package System.Configuration.ConfigurationManager 10.0.8",
+            "protectedSnippet": "System.Configuration.ConfigurationManager, 9.0.3\n\nRecommendation:\n\nRemove System.Configuration.ConfigurationManager, and replace with new package System.Configuration.ConfigurationManager 10.0.8",
+            "label": "System.Configuration.ConfigurationManager 9.0.3",
+            "properties": {
+              "PackageId": "System.Configuration.ConfigurationManager",
+              "PackageVersion": "9.0.3",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "5fbf62a4-e0d2-470d-9763-edc3527fa1f7",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\HaywireGM.Server.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "cf30e660-fcfd-4ca4-820a-25266ff8cc43",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Forwarded Headers Middleware ignores X-Forwarded-* headers from unknown proxies ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseForwardedHeaders();",
+              "protected": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "app.UseForwardedHeaders();",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder)",
+            "label": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/8.0/forwarded-headers-unknown-proxies.md",
+                "isCustom": false
+              }
+            ],
+            "line": 240,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "baeedaed-bbcd-4e32-9918-038df3d332a1",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.AddPolicy(\u0022sensitive\u0022, httpContext =\u003E\r\n        RateLimitPartition.GetFixedWindowLimiter(\r\n            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? \u0022unknown\u0022,\r\n            factory: _ =\u003E new FixedWindowRateLimiterOptions\r\n            {\r\n                PermitLimit = 10,\r\n                Window = TimeSpan.FromMinutes(1),\r\n                QueueLimit = 0\r\n            }));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.AddPolicy(\u0022sensitive\u0022, httpContext =\u003E\r\n        RateLimitPartition.GetFixedWindowLimiter(\r\n            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? \u0022unknown\u0022,\r\n            factory: _ =\u003E new FixedWindowRateLimiterOptions\r\n            {\r\n                PermitLimit = 10,\r\n                Window = TimeSpan.FromMinutes(1),\r\n                QueueLimit = 0\r\n            }));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 206,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "c1e1f1f8-fb90-44e0-b6a0-b43e93d26c7a",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.GlobalLimiter = PartitionedRateLimiter.Create\u003CHttpContext, string\u003E(httpContext =\u003E\r\n        RateLimitPartition.GetFixedWindowLimiter(\r\n            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? \u0022unknown\u0022,\r\n            factory: _ =\u003E new FixedWindowRateLimiterOptions\r\n            {\r\n                PermitLimit = 60,\r\n                Window = TimeSpan.FromMinutes(1),\r\n                QueueLimit = 0\r\n            }));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.GlobalLimiter = PartitionedRateLimiter.Create\u003CHttpContext, string\u003E(httpContext =\u003E\r\n        RateLimitPartition.GetFixedWindowLimiter(\r\n            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? \u0022unknown\u0022,\r\n            factory: _ =\u003E new FixedWindowRateLimiterOptions\r\n            {\r\n                PermitLimit = 60,\r\n                Window = TimeSpan.FromMinutes(1),\r\n                QueueLimit = 0\r\n            }));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 195,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "24e91457-b6ad-4dd9-8fd8-899299aa64d7",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.Configure\u003CDbSettings\u003E(builder.Configuration.GetSection(\u0022DbSettings\u0022));",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "builder.Services.Configure\u003CDbSettings\u003E(builder.Configuration.GetSection(\u0022DbSettings\u0022));",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 117,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "e914bcf1-95ac-492c-9e87-2806d4002a3d",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.AddPolicy(\u0022ShortCache\u0022, builder =\u003E builder.Expire(TimeSpan.FromSeconds(30)));",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.AddPolicy(\u0022ShortCache\u0022, builder =\u003E builder.Expire(TimeSpan.FromSeconds(30)));",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Int64)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 114,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "25cb7b7a-7a31-4c9b-8a1d-4536c0adb332",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.AddPolicy(\u0022CampaignList\u0022, builder =\u003E builder.Expire(TimeSpan.FromMinutes(2)).Tag(\u0022campaigns\u0022));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.AddPolicy(\u0022CampaignList\u0022, builder =\u003E builder.Expire(TimeSpan.FromMinutes(2)).Tag(\u0022campaigns\u0022));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 113,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "7c8c497e-b7bf-48dd-bb0f-443c88a41ca5",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.AddPolicy(\u0022NpcList\u0022, builder =\u003E builder.Expire(TimeSpan.FromMinutes(2)).Tag(\u0022npcs\u0022));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.AddPolicy(\u0022NpcList\u0022, builder =\u003E builder.Expire(TimeSpan.FromMinutes(2)).Tag(\u0022npcs\u0022));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 112,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "93a81b87-ae13-4cbb-9842-99784ceb7426",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.AddBasePolicy(builder =\u003E builder.Expire(TimeSpan.FromMinutes(5)));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Int64)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.AddBasePolicy(builder =\u003E builder.Expire(TimeSpan.FromMinutes(5)));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 111,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "fd0575ab-6086-424b-8bb6-2a475dac6685",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 67,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "a96f8426-990a-47a8-b360-62094178f97a",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.Authority = cognitoSettings?.Authority;",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.Authority = cognitoSettings?.Authority;",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 66,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "b0f940f9-7848-419f-9686-da91b9873f56",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "label": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 61,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "64c5f14b-4102-4164-8394-b37fa719307c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "label": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 61,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "871120bc-a88f-4dff-8ca4-af052e245492",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "label": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 60,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "12d230bf-a2cd-44f1-8ef0-cda78372d591",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "label": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 60,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "c823723c-c4f5-40d0-a259-e3601359f429",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;\r\n    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    // Cognito token validation\r\n    options.Authority = cognitoSettings?.Authority;\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };\r\n});",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;\r\n    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    // Cognito token validation\r\n    options.Authority = cognitoSettings?.Authority;\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };\r\n});",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 58,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "a104c59e-03ca-4190-adf8-ed57f18b9555",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;\r\n    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    // Cognito token validation\r\n    options.Authority = cognitoSettings?.Authority;\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };\r\n});",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;\r\n    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    // Cognito token validation\r\n    options.Authority = cognitoSettings?.Authority;\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidIssuer = cognitoSettings?.Authority,\r\n        ValidateAudience = false, // Cognito doesn\u0027t always set audience in access tokens\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        // Map Cognito claims to standard claims\r\n        NameClaimType = \u0022cognito:username\u0022,\r\n        RoleClaimType = \u0022cognito:groups\u0022\r\n    };\r\n});",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "label": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 58,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "575cd5d6-f1d6-4650-856b-f7a20ed38d9b",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var cognitoSettings = builder.Configuration.GetSection(\u0022Cognito\u0022).Get\u003CCognitoSettings\u003E();",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "var cognitoSettings = builder.Configuration.GetSection(\u0022Cognito\u0022).Get\u003CCognitoSettings\u003E();",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "bd0a153f-baba-4579-8a01-24bdc2550adb",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: IPNetwork and ForwardedHeadersOptions.KnownNetworks are obsolete ",
+          "projectPath": "HaywireGM.Server\\HaywireGM.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.KnownNetworks.Clear();",
+              "protected": "P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.KnownNetworks"
+            },
+            "kind": "File",
+            "path": "HaywireGM.Server\\Program.cs",
+            "snippet": "options.KnownNetworks.Clear();",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.KnownNetworks",
+            "label": "P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.KnownNetworks",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/ipnetwork-knownnetworks-obsolete.md",
+                "isCustom": false
+              }
+            ],
+            "line": 26,
+            "column": 4
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HaywireGM.ServiceDefaults\\HaywireGM.ServiceDefaults.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "HaywireGM.ServiceDefaults",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 129,
+        "linesOfCode": 129,
+        "totalApiScanned": 127,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "0d5093af-d0e6-4573-a475-c7c6017633a6",
+          "ruleId": "Project.0002",
+          "projectPath": "HaywireGM.ServiceDefaults\\HaywireGM.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "HaywireGM.ServiceDefaults\\HaywireGM.ServiceDefaults.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "NuGet package upgrade is recommended for selected target framework.\n\nStandard .NET packages are recommended to have versions matching version of .NET that project targets.\n\nSome other packages also are known to work better for selected target frameworks.",
+      "label": "NuGet package upgrade is recommended",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "API is source incompatible for selected .NET version: requires code changes to compile successfully when targeting a new version, such as removing obsolete APIs or changing method signatures.",
+      "label": "Source incompatible for selected .NET version",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0001": {
+      "id": "NuGet.0001",
+      "isFeature": false,
+      "description": "NuGet package is incompatible with selected target framework.\n\nPackage needs to be upgraded to a version supporting selected project target framework. If there no new package versions supporting new target framework, different package needs to be used and all code needs to be upgraded to new API.",
+      "label": "NuGet package is incompatible",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262529",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "API has a behavioral change in selected .NET version: code and binaries may behave differently at runtime without needing recompilation, but the new behavior might be undesirable and require updates.",
+      "label": "Behavioral change in selected .NET version",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "Api.0001": {
+      "id": "Api.0001",
+      "isFeature": false,
+      "description": "API is binary incompatible for selected .NET version: affects existing binaries, often requiring recompilation, because the API has changed in a way that prevents older binaries from loading or executing.",
+      "label": "Binary incompatible for selected .NET version",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0005": {
+      "id": "NuGet.0005",
+      "isFeature": false,
+      "description": "NuGet package is deprecated.\n\nGo to its documentation and if there is a guidance for replacement of functionality provided by this package.",
+      "label": "NuGet package is deprecated",
+      "severity": "Optional",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262531",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
