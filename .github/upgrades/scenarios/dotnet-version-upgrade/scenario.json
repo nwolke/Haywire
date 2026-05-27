@@ -3,12 +3,13 @@
   "operationId": "6888356f-07ac-447e-aeb8-6bdc3891eb4c",
   "description": "Upgrade .NET projects to newer .NET versions",
   "startTime": "2026-05-27T22:00:00.0387036Z",
-  "lastUpdateTime": "2026-05-27T22:02:46.2139562Z",
+  "lastUpdateTime": "2026-05-27T22:23:58.4882534Z",
   "stage": "Assessment",
   "properties": {
-    "currentTask": "02-upgrade-all",
+    "currentTask": "03-tests",
     "UpgradeTargetFramework": "net10.0",
     "task:02-upgrade-all:startedAt": "2026-05-27T22:02:46.2139562Z",
+    "task:03-tests:startedAt": "2026-05-27T22:23:58.4882534Z",
     "task:01-prereqs:startedAt": "2026-05-27T22:02:24.5230742Z"
   },
   "folderPath": ""
