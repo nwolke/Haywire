@@ -7,7 +7,7 @@ using HaywireGM.Server.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Security;
@@ -154,18 +154,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 
     // Add Security Requirement
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    c.AddSecurityRequirement(_ => new OpenApiSecurityRequirement()
     {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2"
-            },
+            new OpenApiSecuritySchemeReference("Bearer"),
             new List<string>()
         }
     });
