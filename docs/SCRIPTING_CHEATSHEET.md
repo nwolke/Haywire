@@ -310,7 +310,7 @@ docker-compose logs -f
 docker-compose up -d --build
 
 # Check status
-docker ps -a --filter "name=gm_buddy"
+docker ps -a --filter "name=haywiregm"
 
 # Stop specific containers
 $containers = @("container1", "container2")

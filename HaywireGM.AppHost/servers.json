@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "haywiregm_postgres": {
+      "Name": "haywiregm_postgres",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "haywiregm",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}

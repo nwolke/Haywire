@@ -1,11 +1,11 @@
-# Batch & PowerShell Scripting Guide for GM Buddy
+# Batch & PowerShell Scripting Guide for HaywireGM
 
 ## ?? Table of Contents
 1. [What Are Scripts?](#what-are-scripts)
 2. [Batch vs PowerShell](#batch-vs-powershell)
 3. [Getting Started](#getting-started)
 4. [Common Commands](#common-commands)
-5. [Examples for GM Buddy](#examples-for-gm-buddy)
+5. [Examples for HaywireGM](#examples-for-haywiregm)
 6. [Best Practices](#best-practices)
 
 ---
@@ -133,16 +133,16 @@ param([string]$Name)                 # Script parameters
 
 ---
 
-## ?? Examples for GM Buddy
+## ?? Examples for HaywireGM
 
 ### 1. Docker Management (Batch)
 
 **docker-down.bat** (Already created!)
 ```batch
 @echo off
-echo Stopping GM Buddy containers...
-docker stop gm_buddy_client gm_buddy_pgadmin gm_buddy_server gm_buddy_authorization gm_buddy_postgres
-docker rm gm_buddy_client gm_buddy_pgadmin gm_buddy_server gm_buddy_authorization gm_buddy_postgres
+echo Stopping HaywireGM containers...
+docker stop haywiregm_client haywiregm_pgadmin haywiregm_server haywiregm_authorization haywiregm_postgres
+docker rm haywiregm_client haywiregm_pgadmin haywiregm_server haywiregm_authorization haywiregm_postgres
 echo Done!
 pause
 ```
@@ -188,7 +188,7 @@ param(
     [switch]$FullStack
 )
 
-Write-Host "GM Buddy Development Workflow" -ForegroundColor Cyan
+Write-Host "HaywireGM Development Workflow" -ForegroundColor Cyan
 
 if ($FullStack -or $Backend) {
     Write-Host "`n?? Starting Docker containers..." -ForegroundColor Yellow
@@ -198,7 +198,7 @@ if ($FullStack -or $Backend) {
 
 if ($FullStack -or $Frontend) {
     Write-Host "`n?? Starting Frontend dev server..." -ForegroundColor Yellow
-    Set-Location "gm_buddy.client"
+    Set-Location "haywiregm.client"
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "npm run dev"
     Set-Location ..
 }
@@ -295,11 +295,11 @@ Write-Host "? Completed!" -ForegroundColor Green
 notepad $PROFILE
 
 # Add aliases for your scripts
-function GMBuddy-Up { & "C:\Path\To\GM_Buddy\manage-docker.ps1" -Action up }
-function GMBuddy-Down { & "C:\Path\To\GM_Buddy\manage-docker.ps1" -Action down }
+function HaywireGM-Up { & "C:\Path\To\HaywireGM\manage-docker.ps1" -Action up }
+function HaywireGM-Down { & "C:\Path\To\HaywireGM\manage-docker.ps1" -Action down }
 
 # Now you can just type:
-GMBuddy-Up
+HaywireGM-Up
 ```
 
 ### Keyboard Shortcuts
@@ -310,7 +310,7 @@ GMBuddy-Up
 
 ---
 
-## ?? Your Scripts in GM Buddy
+## ?? Your Scripts in HaywireGM
 
 I've created these scripts for you:
 
