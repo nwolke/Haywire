@@ -1,12 +1,12 @@
 # Metrics Logging
 
 ## Overview
-This implementation adds OpenTelemetry-powered diagnostics to all HTTP requests in the GM Buddy API.
+This implementation adds OpenTelemetry-powered diagnostics to all HTTP requests in the HaywireGM API.
 
 ## Implementation Details
 
 ### MetricsLoggingMiddleware
-Located in `GM_Buddy.Server/Middleware/MetricsLoggingMiddleware.cs`
+Located in `HaywireGM.Server/Middleware/MetricsLoggingMiddleware.cs`
 
 This middleware:
 - Uses `System.Diagnostics.Stopwatch` to measure request execution time
@@ -18,9 +18,9 @@ This middleware:
 - Executes in the finally block to ensure metrics are logged even if errors occur
 
 ### OpenTelemetry + Aspire
-- Shared OpenTelemetry configuration is defined in `GM_Buddy.ServiceDefaults/Extensions.cs`
+- Shared OpenTelemetry configuration is defined in `HaywireGM.ServiceDefaults/Extensions.cs`
 - Runtime, process, ASP.NET Core, and HTTP client instrumentation are enabled
-- Custom server diagnostics metrics are exported through the `GM_Buddy.Server.Diagnostics` meter
+- Custom server diagnostics metrics are exported through the `HaywireGM.Server.Diagnostics` meter
 - When running with .NET Aspire, these diagnostics are visible in the Aspire dashboard for local debugging
 
 ### Security Features

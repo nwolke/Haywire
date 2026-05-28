@@ -1,0 +1,276 @@
+using HaywireGM.Business;
+using HaywireGM.Contracts;
+using HaywireGM.Contracts.Interfaces;
+using HaywireGM.Data;
+using HaywireGM.Server.Helpers;
+using HaywireGM.Server.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.IO.Compression;
+using System.Net;
+using System.Net.Security;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Configure forwarded headers so rate limiting uses real client IPs behind reverse proxy/load balancer
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // Clear default loopback-only restrictions so headers from non-loopback proxies are trusted.
+    // ForwardLimit = 1 means we trust exactly one hop (the immediate proxy/LB).
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+    options.ForwardLimit = 1;
+});
+
+builder.AddServiceDefaults();
+
+// Load Cognito settings
+var cognitoSettings = builder.Configuration.GetSection("Cognito").Get<CognitoSettings>();
+
+builder.Services.ConfigureHttpClientDefaults(config =>
+{
+    config.ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        HttpClientHandler handler = new()
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) =>
+            {
+#if DEBUG
+                return true; // DEV - Accept all certificates in development
+#else
+                return errors == SslPolicyErrors.None;
+#endif
+            }
+        };
+        return handler;
+    });
+});
+
+// Add services to the container.
+// Configure JWT Bearer authentication with AWS Cognito
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Cognito token validation
+    options.Authority = cognitoSettings?.Authority;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = cognitoSettings?.Authority,
+        ValidateAudience = false, // Cognito doesn't always set audience in access tokens
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        // Map Cognito claims to standard claims
+        NameClaimType = "cognito:username",
+        RoleClaimType = "cognito:groups"
+    };
+});
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
+
+// Add Response Compression for better network performance
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+    {
+        "application/json",
+        "text/json"
+    });
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.SmallestSize;
+});
+
+// Add Memory Cache for caching frequently accessed data
+builder.Services.AddMemoryCache();
+
+// Add Output Cache for API response caching
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromMinutes(5)));
+    options.AddPolicy("NpcList", builder => builder.Expire(TimeSpan.FromMinutes(2)).Tag("npcs"));
+    options.AddPolicy("CampaignList", builder => builder.Expire(TimeSpan.FromMinutes(2)).Tag("campaigns"));
+    options.AddPolicy("ShortCache", builder => builder.Expire(TimeSpan.FromSeconds(30)));
+});
+
+builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("DbSettings"));
+builder.Services.AddTransient<IDbConnector, DbConnector>();
+builder.Services.AddScoped<INpcLogic, NpcLogic>();
+builder.Services.AddScoped<ICampaignLogic, CampaignLogic>();
+builder.Services.AddScoped<INpcRepository, NpcRepository>();
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<IRelationshipRepository, RelationshipRepository>();
+builder.Services.AddScoped<IPcRepository, PcRepository>();
+builder.Services.AddScoped<IPcLogic, PcLogic>();
+builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthHelper, AuthHelper>();
+builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+builder.Services.AddScoped<IAccountLogic, AccountLogic>();
+builder.Services.AddScoped<INewAccountDataSeeder, NewAccountDataSeeder>();
+
+// Register AccountRepository for Cognito user management
+builder.Services.AddScoped<IAccountRepository>(sp =>
+{
+    var dbConnector = sp.GetRequiredService<IDbConnector>();
+    return new AccountRepository(dbConnector.ConnectionString);
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });
+
+    // Add Security Definition
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+
+    // Add Security Requirement
+    c.AddSecurityRequirement(_ => new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer"),
+            new List<string>()
+        }
+    });
+});
+
+// Rate Limiting Configuration
+builder.Services.AddRateLimiter(options =>
+{
+    // Return 429 Too Many Requests with Retry-After header
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+        {
+            var retryAfterSeconds = (int)Math.Ceiling(retryAfter.TotalSeconds);
+            if (retryAfterSeconds < 1)
+            {
+                retryAfterSeconds = 1;
+            }
+            context.HttpContext.Response.Headers.RetryAfter = retryAfterSeconds.ToString();
+        }
+        await context.HttpContext.Response.WriteAsync(
+            """{"error":"Too many requests. Please try again later."}""", cancellationToken);
+    };
+
+    // Global policy: 60 requests per minute per IP
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+    // Stricter policy for sensitive account endpoints (sync, delete) - per IP
+    options.AddPolicy("sensitive", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
+
+// CORS Configuration - allow both HTTP and HTTPS for local dev
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(
+                "https://localhost:49505",  // HTTPS Vite dev server
+                "http://localhost:49505",
+                "http://localhost:3000",    // Local dev (Vite or Docker React)
+                "https://localhost:3000",
+                "https://haywiregm.nwolke.com" // Production CloudFront distribution
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Allow credentials (cookies, auth headers)
+    });
+});
+
+WebApplication app = builder.Build();
+
+app.MapDefaultEndpoints();
+
+// Process forwarded headers first so downstream middleware sees real client IPs
+app.UseForwardedHeaders();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    // Only use HTTPS redirection if not running in Docker (where we use HTTP internally)
+    // or if explicitly enabled via configuration
+    var runningInDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+    var enableHttpsRedirect = app.Configuration.GetValue<bool>("EnableHttpsRedirect", !runningInDocker);
+    if (enableHttpsRedirect)
+    {
+        app.UseHttpsRedirection();
+    }
+}
+
+// Response Compression - should be early in the pipeline
+app.UseResponseCompression();
+
+// Global exception handler - converts unhandled exceptions to ProblemDetails with correlation IDs
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
+// Metrics logging middleware - logs timing and parameters for each request
+app.UseMiddleware<MetricsLoggingMiddleware>();
+
+// CORS must come BEFORE Authentication/Authorization and MapControllers
+app.UseCors("AllowSpecificOrigins");
+
+// Rate limiting - after CORS so preflight requests aren't rate-limited
+app.UseRateLimiter();
+
+// Output Cache for API responses
+app.UseOutputCache();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

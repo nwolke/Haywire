@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GM_Buddy.Server.DbModels
+namespace HaywireGM.Server.DbModels
 {
     [PrimaryKey("npc_id")]
     [Table("npc")]

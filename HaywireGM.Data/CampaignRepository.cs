@@ -1,0 +1,93 @@
+﻿using Dapper;
+using HaywireGM.Contracts.DbEntities;
+using HaywireGM.Contracts.Interfaces;
+using System.Data;
+
+namespace HaywireGM.Data;
+
+public class CampaignRepository : ICampaignRepository
+{
+    private readonly IDbConnector _dbConnector;
+
+    private const string CampaignSelectClause = @"
+            SELECT c.campaign_id,
+                   c.account_id, 
+                   c.name, 
+                   c.description,
+                   c.created_at,
+                   c.updated_at
+            FROM campaign c";
+
+    public CampaignRepository(IDbConnector dbConnector)
+    {
+        _dbConnector = dbConnector;
+    }
+
+    public async Task<int> CreateAsync(Campaign campaign, CancellationToken ct= default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = @"
+            INSERT INTO campaign (account_id, name, description)
+            VALUES (@account_id, @name, @description)
+            RETURNING campaign_id";
+        var cmd = new CommandDefinition(sql, campaign, cancellationToken: ct);
+        return await dbConnection.ExecuteScalarAsync<int>(cmd);
+    }
+
+    public async Task<bool> DeleteAsync(int campaignId, int accountId, CancellationToken ct = default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = @"DELETE FROM campaign WHERE campaign_id = @CampaignId AND account_id = @AccountId";
+        var cmd = new CommandDefinition(sql, new { CampaignId = campaignId, AccountId = accountId }, cancellationToken: ct);
+        int rowsAffected = await dbConnection.ExecuteAsync(cmd);
+        return rowsAffected > 0;
+    }
+
+    public async Task<IEnumerable<Campaign>> GetByAccountIdAsync(int accountId, CancellationToken ct = default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = @"
+            SELECT c.campaign_id,
+                   c.account_id, 
+                   c.name, 
+                   c.description,
+                   c.created_at,
+                   c.updated_at
+            FROM campaign c
+            WHERE c.account_id = @AccountId
+            ORDER BY c.updated_at DESC";
+        var cmd = new CommandDefinition(sql, new { AccountId = accountId }, cancellationToken: ct);
+        return await dbConnection.QueryAsync<Campaign>(cmd);
+    }
+
+    public async Task<Campaign?> GetByIdAsync(int campaignId, CancellationToken ct = default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = CampaignSelectClause + @"
+            WHERE c.campaign_id = @CampaignId";
+        var cmd = new CommandDefinition(sql, new { CampaignId = campaignId }, cancellationToken: ct);
+        return await dbConnection.QueryFirstOrDefaultAsync<Campaign>(cmd);
+    }
+
+    public async Task<Campaign?> GetByIdAndAccountAsync(int campaignId, int accountId, CancellationToken ct = default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = CampaignSelectClause + @"
+            WHERE c.campaign_id = @CampaignId AND c.account_id = @AccountId";
+        var cmd = new CommandDefinition(sql, new { CampaignId = campaignId, AccountId = accountId }, cancellationToken: ct);
+        return await dbConnection.QueryFirstOrDefaultAsync<Campaign>(cmd);
+    }
+
+    public async Task<bool> UpdateAsync(Campaign campaign, CancellationToken ct = default)
+    {
+        using IDbConnection dbConnection = _dbConnector.CreateConnection();
+        const string sql = @"
+            UPDATE campaign 
+            SET name = @name,
+                description = @description
+            WHERE campaign_id = @campaign_id AND account_id = @account_id";
+        var cmd = new CommandDefinition(sql, campaign, cancellationToken: ct);
+        var rowsAffected = await dbConnection.ExecuteAsync(cmd);
+        return rowsAffected > 0;
+    }
+}

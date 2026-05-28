@@ -1,8 +1,8 @@
-# GM Buddy
+# HaywireGM
 
 A web app for tabletop RPG game masters to manage campaigns, track NPCs and player characters, and visualize the relationships between them.
 
-**Live:** [gmbuddy.nwolke.com](https://gmbuddy.nwolke.com)
+**Live:** [haywiregm.nwolke.com](https://haywiregm.nwolke.com)
 
 ---
 
@@ -48,16 +48,16 @@ A web app for tabletop RPG game masters to manage campaigns, track NPCs and play
 ## Project Structure
 
 ```
-GM_Buddy/
-├── GM_Buddy.Server/          # ASP.NET Core Web API
-├── GM_Buddy.Business/        # Business logic layer
-├── GM_Buddy.Data/            # Data access (Dapper repositories)
-├── GM_Buddy.Contracts/       # Shared DTOs and interfaces
-├── GM_Buddy.Business.UnitTests/
-├── GM_Buddy.Business.ComponentTests/
-├── GM_Buddy.ServiceDefaults/ # Shared .NET Aspire service config
-├── GM_Buddy.AppHost/         # .NET Aspire app host
-├── GM_Buddy.React/           # React frontend (Vite)
+HaywireGM/
+├── HaywireGM.Server/          # ASP.NET Core Web API
+├── HaywireGM.Business/        # Business logic layer
+├── HaywireGM.Data/            # Data access (Dapper repositories)
+├── HaywireGM.Contracts/       # Shared DTOs and interfaces
+├── HaywireGM.Business.UnitTests/
+├── HaywireGM.Business.ComponentTests/
+├── HaywireGM.ServiceDefaults/ # Shared .NET Aspire service config
+├── HaywireGM.AppHost/         # .NET Aspire app host
+├── HaywireGM.React/           # React frontend (Vite)
 ├── migrations/               # SQL database migrations
 └── docs/                     # Additional documentation
 ```
@@ -75,8 +75,8 @@ GM_Buddy/
 ### 1. Clone and configure environment
 
 ```bash
-git clone https://github.com/nwolke/GM_Buddy.git
-cd GM_Buddy
+git clone https://github.com/nwolke/HaywireGM.git
+cd HaywireGM
 cp .env.example .env
 ```
 
@@ -93,7 +93,7 @@ Or point `appsettings.Development.json` at an existing PostgreSQL instance and r
 ### 3. Run the backend
 
 ```bash
-cd GM_Buddy.Server
+cd HaywireGM.Server
 dotnet run
 ```
 
@@ -102,7 +102,7 @@ API is available at `http://localhost:8080`. Swagger UI at `http://localhost:808
 ### 4. Run the frontend
 
 ```bash
-cd GM_Buddy.React
+cd HaywireGM.React
 npm install --legacy-peer-deps
 npm run dev
 ```
@@ -119,7 +119,7 @@ Copy `.env.example` to `.env` and fill in the following:
 |---|---|
 | `POSTGRES_USER` | PostgreSQL username |
 | `POSTGRES_PASSWORD` | PostgreSQL password |
-| `POSTGRES_DB` | Database name (default: `gm_buddy`) |
+| `POSTGRES_DB` | Database name (default: `haywiregm`) |
 | `COGNITO_REGION` | AWS region for Cognito (e.g. `us-west-2`) |
 | `COGNITO_USER_POOL_ID` | Cognito User Pool ID |
 | `COGNITO_CLIENT_ID` | Cognito App Client ID |
@@ -131,7 +131,7 @@ Copy `.env.example` to `.env` and fill in the following:
 | `VITE_COGNITO_REDIRECT_URI` | OAuth callback URL |
 | `VITE_COGNITO_LOGOUT_URI` | Post-logout redirect URL |
 
-Backend configuration is also read from `GM_Buddy.Server/appsettings.json` and environment-specific overrides (`appsettings.Development.json`, etc.).
+Backend configuration is also read from `HaywireGM.Server/appsettings.json` and environment-specific overrides (`appsettings.Development.json`, etc.).
 
 ---
 
@@ -146,7 +146,7 @@ dotnet test
 ### Frontend
 
 ```bash
-cd GM_Buddy.React
+cd HaywireGM.React
 
 npm run test        # watch mode
 npm run test:run    # single run
@@ -170,5 +170,5 @@ CI runs automatically on pushes and PRs to `main` and `develop` via `build-and-t
 
 Built by Nathan Wolke.
 
-- Email: [gmbuddy@outlook.com](mailto:gmbuddy@outlook.com)
+- Email: [haywiregm@outlook.com](mailto:haywiregm@outlook.com)
 - GitHub: [github.com/nwolke](https://github.com/nwolke)

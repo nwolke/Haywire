@@ -12,7 +12,7 @@ Configure these in: **Settings ? Secrets and variables ? Actions ? Repository se
 |-------------|-------------|---------|
 | `POSTGRES_USER` | PostgreSQL username | `postgres` |
 | `POSTGRES_PASSWORD` | PostgreSQL password | `your_secure_password` |
-| `POSTGRES_DB` | Database name | `gm_buddy` |
+| `POSTGRES_DB` | Database name | `haywiregm` |
 
 ### AWS Cognito Secrets
 
@@ -54,7 +54,7 @@ jobs:
             --build-arg VITE_COGNITO_REDIRECT_URI=${{ secrets.REACT_REDIRECT_URI }} \
             --build-arg VITE_COGNITO_LOGOUT_URI=${{ secrets.REACT_LOGOUT_URI }} \
             --build-arg VITE_USE_COGNITO=${{ secrets.USE_COGNITO }} \
-            gm_buddy_web
+            haywiregm_web
 
   deploy:
     runs-on: ubuntu-latest
@@ -88,9 +88,9 @@ Just use the existing `.env` file. The React app will show demo login buttons wi
 
 2. Edit `.env.local` with your Cognito values (get from AWS Console or team lead)
 
-3. For the React app, copy `GM_Buddy.React/.env.local.example` to `.env.local`:
+3. For the React app, copy `HaywireGM.React/.env.local.example` to `.env.local`:
    ```bash
-   cp GM_Buddy.React/.env.local.example GM_Buddy.React/.env.local
+   cp HaywireGM.React/.env.local.example HaywireGM.React/.env.local
    ```
 
 4. The `.env.local` files are gitignored and will override the base `.env` files.
@@ -98,8 +98,8 @@ Just use the existing `.env` file. The React app will show demo login buttons wi
 ### Server Configuration
 
 The `appsettings.Development.json` files are gitignored and can contain secrets for local debugging:
-- `GM_Buddy.Web/appsettings.Development.json`
-- `GM_Buddy.Server/appsettings.Development.json`
+- `HaywireGM.Web/appsettings.Development.json`
+- `HaywireGM.Server/appsettings.Development.json`
 
 Copy from `appsettings.json` and add your Cognito values.
 

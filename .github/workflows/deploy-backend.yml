@@ -42,7 +42,7 @@ jobs:
         run: |
           # Build the Docker image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
-            -f GM_Buddy.Server/Dockerfile.production .
+            -f HaywireGM.Server/Dockerfile.production .
           
           # Tag as latest
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \

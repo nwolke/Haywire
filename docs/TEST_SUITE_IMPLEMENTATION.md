@@ -306,7 +306,7 @@ These would require integration/database tests:
 
 ### Run All Tests
 ```bash
-dotnet test GM_Buddy.Business.UnitTests/GM_Buddy.Business.UnitTests.csproj
+dotnet test HaywireGM.Business.UnitTests/HaywireGM.Business.UnitTests.csproj
 ```
 
 ### Run Specific Test Class

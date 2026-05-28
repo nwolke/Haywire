@@ -355,7 +355,7 @@ ASALocalRun/
 *.binlog
 
 # Temporary malformed obj path occasionally generated under React project
-GM_Buddy.React/obj\\Debug/
+HaywireGM.React/obj\\Debug/
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
@@ -427,7 +427,7 @@ appsettings.Development.json
 /docs/SECURITY_FIX_ACCOUNT_SYNC.md
 /docs/TROUBLESHOOTING_COGNITO.md
 /QUICK_FIX.md
-/GM_Buddy.React/RESTART_VITE.md
+/HaywireGM.React/RESTART_VITE.md
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
@@ -438,4 +438,4 @@ appsettings.Development.json
 scripts/
 # Claude AI local settings
 .claude/settings.local.json
-/GM_Buddy.AppHost/db-data
+/HaywireGM.AppHost/db-data
