@@ -687,19 +687,24 @@ export function CampaignPage() {
       </div>
 
       {/* Form Modals */}
-      <NPCForm
-        open={npcFormOpen}
-        onOpenChange={setNpcFormOpen}
-        onSave={handleSaveNPC}
-        editingNPC={editingNPC}
-      />
-      <PCForm
-        open={pcFormOpen}
-        onOpenChange={setPcFormOpen}
-        onSave={savePc}
-        editingPC={editingPC}
-        campaignId={campaignId}
-      />
+      {Number.isFinite(campaignId) && (
+        <NPCForm
+          open={npcFormOpen}
+          onOpenChange={setNpcFormOpen}
+          onSave={handleSaveNPC}
+          editingNPC={editingNPC}
+          campaignId={campaignId as number}
+        />
+      )}
+      {Number.isFinite(campaignId) && (
+        <PCForm
+          open={pcFormOpen}
+          onOpenChange={setPcFormOpen}
+          onSave={savePc}
+          editingPC={editingPC}
+          campaignId={campaignId as number}
+        />
+      )}
     </div>
   );
 }
