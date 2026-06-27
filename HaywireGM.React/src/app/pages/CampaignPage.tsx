@@ -692,6 +692,7 @@ export function CampaignPage() {
         onOpenChange={setNpcFormOpen}
         onSave={handleSaveNPC}
         editingNPC={editingNPC}
+        campaignId={campaignId}
       />
       <PCForm
         open={pcFormOpen}
