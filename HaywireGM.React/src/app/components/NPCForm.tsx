@@ -49,7 +49,11 @@ const [saving, setSaving] = useState(false);
         notes: ""
       });
     }
-  }, [campaignId, editingNPC, open]);
+  }, [editingNPC, open]);
+
+  useEffect(() => {
+    setFormData((current) => ({ ...current, campaignId }));
+  }, [campaignId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
