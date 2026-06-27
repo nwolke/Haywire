@@ -58,7 +58,10 @@ export function NPCForm({ open, onOpenChange, onSave, editingNPC, campaignId }: 
   };
 
   const submitForm = async () => {
-    if (!Number.isFinite(campaignId)) return;
+    if (!Number.isFinite(campaignId)) {
+      console.error('[NPCForm] Cannot save NPC: campaignId is missing or invalid');
+      return;
+    }
     setSaving(true);
     try {
       if (editingNPC) {
