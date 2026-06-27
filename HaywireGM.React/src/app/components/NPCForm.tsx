@@ -15,17 +15,17 @@ interface NPCFormProps {
 }
 
 export function NPCForm({ open, onOpenChange, onSave, editingNPC, campaignId }: NPCFormProps) {
-const [formData, setFormData] = useState({
-  name: "",
-  lineage: "",
-  class: "",
-  description: "",
-  campaignId,
-  faction: "",
-  notes: ""
-});
+  const [formData, setFormData] = useState({
+    name: "",
+    lineage: "",
+    class: "",
+    description: "",
+    campaignId,
+    faction: "",
+    notes: ""
+  });
 
-const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (editingNPC) {
@@ -49,11 +49,7 @@ const [saving, setSaving] = useState(false);
         notes: ""
       });
     }
-  }, [editingNPC, open]);
-
-  useEffect(() => {
-    setFormData((current) => ({ ...current, campaignId }));
-  }, [campaignId]);
+  }, [editingNPC, open, campaignId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +58,7 @@ const [saving, setSaving] = useState(false);
   };
 
   const submitForm = async () => {
+    if (!Number.isFinite(campaignId)) return;
     setSaving(true);
     try {
       if (editingNPC) {

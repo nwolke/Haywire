@@ -61,6 +61,7 @@ describe('NPCForm', () => {
       />
     );
 
+    await waitFor(() => expect(screen.getByLabelText(/name/i)).toHaveValue(editingNPC.name));
     await user.clear(screen.getByLabelText(/name/i));
     await user.type(screen.getByLabelText(/name/i), 'Edited NPC');
     await user.click(screen.getByRole('button', { name: /update npc/i }));
