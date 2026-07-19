@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { NPC, Relationship } from "@/types/npc";
 import { PC } from "@/types/pc";
+import { Organization } from "@/types/organization";
 import { EntityItem, EntityType } from "@/types/entity";
 import { useNPCData } from "@/hooks/useNPCData";
 import { usePCData } from "@/hooks/usePCData";
@@ -11,6 +12,7 @@ import { EntityGraph } from "@/app/components/EntityGraph";
 import { EntityDetailPanel } from "@/app/components/EntityDetailPanel";
 import { NPCForm } from "@/app/components/NPCForm";
 import { PCForm } from "@/app/components/PCForm";
+import { OrganizationForm } from "@/app/components/OrganizationForm";
 import { Header } from "@/app/components/Header";
 import { CampaignAnalyticsPanel } from "@/app/components/CampaignAnalyticsPanel";
 import { Button } from "@/app/components/ui/button";
@@ -89,6 +91,8 @@ export function CampaignPage() {
     loading: organizationLoading,
     error: organizationError,
     refreshOrganizations,
+    saveOrganization,
+    deleteOrganization,
   } = useOrganizationData();
 
   const loading = npcLoading || pcLoading || organizationLoading;
@@ -248,6 +252,10 @@ export function CampaignPage() {
   const [pcFormOpen, setPcFormOpen] = useState(false);
   const [editingPC, setEditingPC] = useState<PC | null>(null);
 
+  // Organization form state
+  const [orgFormOpen, setOrgFormOpen] = useState(false);
+  const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
+
   // Canvas sizing
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
@@ -344,6 +352,26 @@ export function CampaignPage() {
     await refreshOrganizations();
   }, [refreshOrganizations, saveNPC]);
 
+  // Organization CRUD handlers
+  const handleAddOrg = () => {
+    setEditingOrg(null);
+    setOrgFormOpen(true);
+  };
+
+  const handleEditOrg = (org: Organization) => {
+    setEditingOrg(org);
+    setOrgFormOpen(true);
+  };
+
+  const handleDeleteOrg = async (id: number) => {
+    if (confirm('Are you sure you want to delete this organization?')) {
+      await deleteOrganization(id);
+      if (selectedEntity?.entityType === 'organization' && selectedEntity?.id === id) {
+        setSelectedEntityKey(null);
+      }
+    }
+  };
+
   // Handle edit/delete from the detail panel
   const handleEditEntity = () => {
     if (!selectedEntity) return;
@@ -353,6 +381,9 @@ export function CampaignPage() {
     } else if (selectedEntity.entityType === 'pc') {
       const pc = pcs.find(p => p.id === selectedEntity.id);
       if (pc) handleEditPC(pc);
+    } else if (selectedEntity.entityType === 'organization') {
+      const org = organizations.find(o => o.id === selectedEntity.id);
+      if (org) handleEditOrg(org);
     }
   };
 
@@ -362,6 +393,8 @@ export function CampaignPage() {
       handleDeleteNPC(selectedEntity.id);
     } else if (selectedEntity.entityType === 'pc') {
       handleDeletePC(selectedEntity.id);
+    } else if (selectedEntity.entityType === 'organization') {
+      handleDeleteOrg(selectedEntity.id);
     }
   };
 
@@ -566,6 +599,15 @@ export function CampaignPage() {
                     <Plus className="size-3 mr-1" />
                     PC
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleAddOrg}
+                    className="flex-1 h-7 text-xs border-sky-500/30 hover:bg-sky-500/10 text-sky-300"
+                  >
+                    <Plus className="size-3 mr-1" />
+                    Org
+                  </Button>
                 </div>
                 <div className="flex gap-2 text-xs text-muted-foreground px-1">
                   <span>{npcs.length} NPCs</span>
@@ -659,7 +701,7 @@ export function CampaignPage() {
                 />
               </div>
               {/* Edit/Delete actions for selected entity */}
-              {selectedEntity && selectedEntity.entityType !== 'organization' && (
+              {selectedEntity && !(selectedEntity.entityType === 'organization' && selectedEntity.isSynthetic) && (
                 <div className="p-3 border-t border-primary/20 flex gap-2">
                   <Button
                     size="sm"
@@ -705,6 +747,12 @@ export function CampaignPage() {
           campaignId={campaignId as number}
         />
       )}
+      <OrganizationForm
+        open={orgFormOpen}
+        onOpenChange={setOrgFormOpen}
+        onSave={saveOrganization}
+        editingOrganization={editingOrg}
+      />
     </div>
   );
 }
