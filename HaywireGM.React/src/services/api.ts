@@ -653,6 +653,21 @@ export const organizationApi = {
     const response = await apiClient.get<ApiOrganization[]>('/Organizations');
     return response.data.map(normalizeApiOrganization);
   },
+
+  async createOrganization(data: { name: string; description?: string }): Promise<Organization> {
+    const response = await apiClient.post<number>('/Organizations', data);
+    const id = response.data;
+    const getResponse = await apiClient.get<ApiOrganization>(`/Organizations/${id}`);
+    return normalizeApiOrganization(getResponse.data);
+  },
+
+  async updateOrganization(id: number, data: { name: string; description?: string }): Promise<void> {
+    await apiClient.put(`/Organizations/${id}`, { organization_id: id, ...data });
+  },
+
+  async deleteOrganization(id: number): Promise<void> {
+    await apiClient.delete(`/Organizations/${id}`);
+  },
 };
 
 // Export transformation functions for use in hooks

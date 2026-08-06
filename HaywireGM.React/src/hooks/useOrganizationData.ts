@@ -8,6 +8,8 @@ interface UseOrganizationDataReturn {
   loading: boolean;
   error: string | null;
   refreshOrganizations: () => Promise<void>;
+  saveOrganization: (org: Omit<Organization, 'id'> | Organization) => Promise<void>;
+  deleteOrganization: (id: number) => Promise<void>;
 }
 
 export function useOrganizationData(): UseOrganizationDataReturn {
@@ -44,10 +46,26 @@ export function useOrganizationData(): UseOrganizationDataReturn {
     await loadOrganizations();
   }, [loadOrganizations]);
 
+  const saveOrganization = useCallback(async (org: Omit<Organization, 'id'> | Organization) => {
+    if ('id' in org && org.id) {
+      await organizationApi.updateOrganization(org.id, { name: org.name, description: org.description });
+    } else {
+      await organizationApi.createOrganization({ name: org.name, description: org.description });
+    }
+    await loadOrganizations();
+  }, [loadOrganizations]);
+
+  const deleteOrganization = useCallback(async (id: number) => {
+    await organizationApi.deleteOrganization(id);
+    await loadOrganizations();
+  }, [loadOrganizations]);
+
   return {
     organizations,
     loading,
     error,
     refreshOrganizations,
+    saveOrganization,
+    deleteOrganization,
   };
 }
