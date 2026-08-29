@@ -9,6 +9,7 @@ import { usePCData } from "@/hooks/usePCData";
 import { useOrganizationData } from "@/hooks/useOrganizationData";
 import { useCampaignData } from "@/hooks/useCampaignData";
 import { EntityGraph } from "@/app/components/EntityGraph";
+import { GraphLegend } from "@/app/components/GraphLegend";
 import { EntityDetailPanel } from "@/app/components/EntityDetailPanel";
 import { NPCForm } from "@/app/components/NPCForm";
 import { PCForm } from "@/app/components/PCForm";
@@ -649,32 +650,7 @@ export function CampaignPage() {
                   </div>
 
                   {/* Legend */}
-                  <div className="flex items-center gap-3 flex-wrap px-2 py-1.5 bg-card/40 border border-primary/20 rounded-xl">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Relationships:
-                    </span>
-                    {relationshipLegend.map(({ type, color, label }) => (
-                      <div key={type} className="flex items-center gap-1.5">
-                        <span
-                          className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
-                          style={{ backgroundColor: color }}
-                        />
-                        <span className="text-xs text-muted-foreground">{label}</span>
-                      </div>
-                    ))}
-                    <div className="flex items-center gap-1.5 ml-2 border-l border-primary/20 pl-2">
-                      <span className="inline-block w-2.5 h-2.5 rounded-full bg-primary/70 shrink-0" />
-                      <span className="text-xs text-muted-foreground">NPC</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500/70 shrink-0" />
-                      <span className="text-xs text-muted-foreground">PC</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-block w-2.5 h-2.5 rounded-full bg-sky-500/70 shrink-0" />
-                      <span className="text-xs text-muted-foreground">Organization</span>
-                    </div>
-                  </div>
+                  <GraphLegend items={relationshipLegend} />
                 </TabsContent>
 
                 <TabsContent value="analytics" className="flex-1 min-h-0">
