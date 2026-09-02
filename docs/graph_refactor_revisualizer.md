@@ -69,7 +69,7 @@ Phase 6: Hardening, Performance & Docs (Data Loading Consolidation -> Performanc
 
 - **Summary:** Establish a single client-side metadata registry for relationship labels,
   visual encodings, category classifications, and fallback rules.
-- **Rationale:** Color and category mappings were previously fragmented and duplicated
+- **Rationale:** Color and category mappings are currently fragmented and duplicated
   across `EntityGraph`, `CampaignPage`, `RelationshipManager`, `EntityDetailPanel`, and
   analytics.
 - **Dependencies:** Story 1.1
