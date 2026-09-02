@@ -84,8 +84,28 @@ export function VisualizationProvider({ children, campaignId }: VisualizationPro
     }
   }, [state, campaignId]);
 
-  // When campaign changes, reset to initial state (which loads from localStorage for the new campaign)
+  // When campaign changes, load the stored state for that campaign
   useEffect(() => {
+    if (!campaignId) {
+      dispatch({ type: 'RESET_TO_DEFAULT' });
+      return;
+    }
+
+    const storageKey = `haywiregm_visualization_${campaignId}`;
+    const stored = localStorage.getItem(storageKey);
+
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const loadedState = deserializeVisualizationState(parsed);
+        dispatch({ type: 'LOAD_STATE', payload: loadedState });
+        return;
+      } catch (err) {
+        console.warn(`[VisualizationProvider] Failed to load state for campaign ${campaignId}:`, err);
+      }
+    }
+
+    // If no stored state found, reset to default
     dispatch({ type: 'RESET_TO_DEFAULT' });
   }, [campaignId]);
 

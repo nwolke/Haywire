@@ -41,7 +41,8 @@ export type VisualizationAction =
   | { type: 'SET_ACTIVE_VIEW'; payload: ViewMode }
   | { type: 'SET_ZOOM_TIER'; payload: ZoomTier }
   | { type: 'SET_SEARCH'; payload: string }
-  | { type: 'RESET_TO_DEFAULT' };
+  | { type: 'RESET_TO_DEFAULT' }
+  | { type: 'LOAD_STATE'; payload: VisualizationState };
 
 /**
  * Create the default visualization state for a campaign.
@@ -110,6 +111,9 @@ export function visualizationStateReducer(
 
     case 'RESET_TO_DEFAULT':
       return createDefaultVisualizationState();
+
+    case 'LOAD_STATE':
+      return action.payload;
 
     default:
       return state;
