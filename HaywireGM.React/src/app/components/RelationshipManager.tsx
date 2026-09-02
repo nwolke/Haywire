@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/app/components/ui/input";
 import { Trash2 } from "lucide-react";
 import { Badge } from "@/app/components/ui/badge";
+import { getRelationshipBadgeClassName } from "@/domain/relationshipMetadata";
 
 interface RelationshipManagerProps {
   open: boolean;
@@ -26,22 +27,6 @@ const relationshipTypes: RelationshipType[] = [
   'acquaintance', 'ally', 'contact/informant', 'employer', 'enemy',
   'family', 'lover', 'mentor', 'patron', 'rival', 'stranger', 'vassal/follower',
 ];
-
-const relationshipColors: Record<string, string> = {
-  acquaintance: 'bg-slate-500',
-  ally: 'bg-green-500',
-  'contact/informant': 'bg-teal-500',
-  employer: 'bg-amber-600',
-  enemy: 'bg-red-500',
-  family: 'bg-purple-500',
-  lover: 'bg-rose-500',
-  mentor: 'bg-blue-500',
-  patron: 'bg-sky-500',
-  rival: 'bg-orange-500',
-  stranger: 'bg-zinc-500',
-  'vassal/follower': 'bg-stone-500',
-  neutral: 'bg-gray-500',
-};
 
 export function RelationshipManager({
   open,
@@ -129,7 +114,7 @@ export function RelationshipManager({
                   return (
                     <div key={rel.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3 flex-1">
-                        <Badge className={relationshipColors[rel.type] ?? relationshipColors.neutral}>
+                        <Badge className={getRelationshipBadgeClassName(rel.type)}>
                           {rel.type}
                         </Badge>
                         <span className={`text-xs font-semibold ${
