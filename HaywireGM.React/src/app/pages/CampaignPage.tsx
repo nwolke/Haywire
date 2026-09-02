@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useRef, useEffect, useMemo, useCallback, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { NPC, Relationship } from "@/types/npc";
 import { PC } from "@/types/pc";
@@ -32,6 +32,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { VisualizationProvider, useVisualization } from "@/contexts/VisualizationContext";
 import { FALLBACK_RELATIONSHIP_METADATA, listKnownRelationshipTypes, MEMBERSHIP_METADATA } from "@/domain/relationshipMetadata";
 import { deriveExplicitMemberships } from "@/domain/visualizationSelectors";
 import { resolveMemberships } from "@/domain/membershipPrecedence";
@@ -49,14 +50,36 @@ const relationshipLegend: { type: string; color: string; label: string }[] = [
 const SYNTHETIC_ORGANIZATION_ID_BASE = -1_000_000;
 const SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE = -2_000_000;
 
+/**
+ * Wrapper component that provides visualization state management for the campaign page.
+ * Story 2.1: Extract Visualization State Hook and Provider
+ */
 export function CampaignPage() {
   const { id } = useParams<{ id: string }>();
   const campaignId = id ? Number(id) : undefined;
+
+  // Wrap the actual content with the visualization provider
+  return (
+    <VisualizationProvider campaignId={campaignId}>
+      <CampaignPageContent campaignId={campaignId} />
+    </VisualizationProvider>
+  );
+}
+
+/**
+ * Core campaign page content that uses visualization state management.
+ * This component acts as a layout and composition shell, delegating
+ * transient visual state to the VisualizationContext.
+ */
+function CampaignPageContent({ campaignId }: { campaignId: number | undefined }) {
   const { isAuthenticated, loginWithCognito, loading: authLoading } = useAuth();
 
   // Fetch campaign info for breadcrumb
   const { campaigns } = useCampaignData();
   const campaign = campaigns.find(c => c.id === campaignId);
+
+  // Consume visualization state from context
+  const visualization = useVisualization();
 
   // Data hooks scoped to this campaign
   const {
@@ -205,21 +228,26 @@ export function CampaignPage() {
     ...organizationEntities,
   ], [npcs, pcs, organizationEntities]);
 
-  const [selectedEntityKey, setSelectedEntityKey] = useState<{ id: number; entityType: EntityType } | null>(null);
-  const [search, setSearch] = useState("");
-  const [showNPCs, setShowNPCs] = useState(true);
-  const [showPCs, setShowPCs] = useState(true);
-  const [showOrganizations, setShowOrganizations] = useState(true);
-  const [activeCenterTab, setActiveCenterTab] = useState("graph");
+  // Extract visualization state from context
+  const { state: vizState } = visualization;
 
+  // Derive showNPCs, showPCs, showOrganizations from filters
+  const showNPCs = vizState.filters.entityTypes.includes('npc');
+  const showPCs = vizState.filters.entityTypes.includes('pc');
+  const showOrganizations = vizState.filters.entityTypes.includes('organization');
+
+  // Map activeView from visualization state (was activeCenterTab in old code)
+  const activeCenterTab = vizState.activeView;
+
+  // Resolve selectedEntity from visualization state
   const selectedEntity = useMemo(
-    () => selectedEntityKey
+    () => vizState.selectedEntity
       ? entities.find(entity => (
-        entity.id === selectedEntityKey.id &&
-        entity.entityType === selectedEntityKey.entityType
+        entity.id === vizState.selectedEntity!.id &&
+        entity.entityType === vizState.selectedEntity!.entityType
       )) ?? null
       : null,
-    [entities, selectedEntityKey],
+    [entities, vizState.selectedEntity],
   );
 
   // NPC form state
@@ -262,13 +290,13 @@ export function CampaignPage() {
     return () => observer?.disconnect();
   }, [activeCenterTab, updateCanvasSize]);
 
-  // Filter entities
+  // Filter entities based on visualization state
   const filteredEntities = entities.filter(e => {
     if (e.entityType === 'npc' && !showNPCs) return false;
     if (e.entityType === 'pc' && !showPCs) return false;
     if (e.entityType === 'organization' && !showOrganizations) return false;
-    if (search.trim()) {
-      return e.name.toLowerCase().includes(search.toLowerCase());
+    if (vizState.search.trim()) {
+      return e.name.toLowerCase().includes(vizState.search.toLowerCase());
     }
     return true;
   });
@@ -300,7 +328,7 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this NPC? All their relationships will also be removed.')) {
       await deleteNPC(id);
       if (selectedEntity?.entityType === 'npc' && selectedEntity?.id === id) {
-        setSelectedEntityKey(null);
+        visualization.clearSelectedEntity();
       }
     }
   };
@@ -320,7 +348,7 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this character?')) {
       await deletePc(id);
       if (selectedEntity?.entityType === 'pc' && selectedEntity?.id === id) {
-        setSelectedEntityKey(null);
+        visualization.clearSelectedEntity();
       }
     }
   };
@@ -345,7 +373,7 @@ export function CampaignPage() {
     if (confirm('Are you sure you want to delete this organization?')) {
       await deleteOrganization(id);
       if (selectedEntity?.entityType === 'organization' && selectedEntity?.id === id) {
-        setSelectedEntityKey(null);
+        visualization.clearSelectedEntity();
       }
     }
   };
@@ -441,7 +469,12 @@ export function CampaignPage() {
               <Button
                 size="sm"
                 variant={showNPCs ? "default" : "outline"}
-                onClick={() => setShowNPCs(v => !v)}
+                onClick={() => {
+                  const newTypes = showNPCs
+                    ? vizState.filters.entityTypes.filter(t => t !== 'npc')
+                    : [...vizState.filters.entityTypes, 'npc'];
+                  visualization.updateFilters({ entityTypes: newTypes });
+                }}
                 className={showNPCs
                   ? "bg-primary/80 hover:bg-primary/70 text-primary-foreground"
                   : "border-primary/30 text-primary hover:bg-primary/10"
@@ -453,7 +486,12 @@ export function CampaignPage() {
               <Button
                 size="sm"
                 variant={showPCs ? "default" : "outline"}
-                onClick={() => setShowPCs(v => !v)}
+                onClick={() => {
+                  const newTypes = showPCs
+                    ? vizState.filters.entityTypes.filter(t => t !== 'pc')
+                    : [...vizState.filters.entityTypes, 'pc'];
+                  visualization.updateFilters({ entityTypes: newTypes });
+                }}
                 className={showPCs
                   ? "bg-green-600/80 hover:bg-green-600/70 text-white"
                   : "border-green-500/30 text-green-400 hover:bg-green-500/10"
@@ -465,7 +503,12 @@ export function CampaignPage() {
               <Button
                 size="sm"
                 variant={showOrganizations ? "default" : "outline"}
-                onClick={() => setShowOrganizations(v => !v)}
+                onClick={() => {
+                  const newTypes = showOrganizations
+                    ? vizState.filters.entityTypes.filter(t => t !== 'organization')
+                    : [...vizState.filters.entityTypes, 'organization'];
+                  visualization.updateFilters({ entityTypes: newTypes });
+                }}
                 className={showOrganizations
                   ? "bg-sky-600/80 hover:bg-sky-600/70 text-white"
                   : "border-sky-500/30 text-sky-300 hover:bg-sky-500/10"
@@ -507,8 +550,8 @@ export function CampaignPage() {
                 <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
                   <Input
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
+                    value={vizState.search}
+                    onChange={e => visualization.setSearch(e.target.value)}
                     placeholder="Search..."
                     className="pl-8 h-8 text-sm bg-background/50 border-primary/20"
                   />
@@ -522,7 +565,7 @@ export function CampaignPage() {
                     </div>
                   ) : filteredEntities.length === 0 ? (
                     <p className="text-xs text-muted-foreground text-center py-6 px-2">
-                      {search ? 'No entities match your search.' : 'No entities yet. Add NPCs, PCs, or factions to get started.'}
+                      {vizState.search ? 'No entities match your search.' : 'No entities yet. Add NPCs, PCs, or factions to get started.'}
                     </p>
                   ) : (
                     filteredEntities.map(entity => {
@@ -534,7 +577,13 @@ export function CampaignPage() {
                       return (
                         <button
                           key={`${entity.entityType}-${entity.id}`}
-                          onClick={() => setSelectedEntityKey(isSelected ? null : { id: entity.id, entityType: entity.entityType })}
+                          onClick={() => {
+                            if (isSelected) {
+                              visualization.clearSelectedEntity();
+                            } else {
+                              visualization.setSelectedEntity(entity.id, entity.entityType);
+                            }
+                          }}
                           className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-colors ${
                             isSelected
                               ? 'bg-primary/20 text-primary'
@@ -601,7 +650,7 @@ export function CampaignPage() {
             <div className="flex-1 flex flex-col min-w-0 gap-2">
               <Tabs
                 value={activeCenterTab}
-                onValueChange={setActiveCenterTab}
+                onValueChange={(value) => visualization.setActiveView(value as any)}
                 className="flex-1 min-h-0"
               >
                 <TabsList className="w-full sm:w-auto">
@@ -616,11 +665,13 @@ export function CampaignPage() {
                       relationships={filteredRelationships}
                       selectedEntityId={selectedEntity?.id}
                       selectedEntityType={selectedEntity?.entityType}
-                      onNodeClick={entity => setSelectedEntityKey(prev =>
-                        prev?.id === entity.id && prev?.entityType === entity.entityType
-                          ? null
-                          : { id: entity.id, entityType: entity.entityType }
-                      )}
+                      onNodeClick={entity => {
+                        if (selectedEntity?.id === entity.id && selectedEntity?.entityType === entity.entityType) {
+                          visualization.clearSelectedEntity();
+                        } else {
+                          visualization.setSelectedEntity(entity.id, entity.entityType);
+                        }
+                      }}
                       width={canvasSize.width}
                       height={canvasSize.height}
                     />
