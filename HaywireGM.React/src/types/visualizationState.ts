@@ -159,12 +159,30 @@ export function deserializeVisualizationState(data: unknown): VisualizationState
   const serialized = data as Record<string, unknown>;
   const defaultState = createDefaultVisualizationState();
 
+  // Safely extract selectedEntity with proper typing
+  const selectedEntity = (
+    serialized.selectedEntity &&
+    typeof serialized.selectedEntity === 'object' &&
+    'id' in serialized.selectedEntity &&
+    'entityType' in serialized.selectedEntity
+      ? (serialized.selectedEntity as { id: number; entityType: EntityType })
+      : null
+  );
+
+  // Safely extract filters with proper typing
+  const filters = (
+    serialized.filters &&
+    typeof serialized.filters === 'object'
+      ? (serialized.filters as RelationshipFilterCriteria)
+      : defaultState.filters
+  );
+
   return {
-    selectedEntity: serialized.selectedEntity ?? defaultState.selectedEntity,
-    filters: serialized.filters ?? defaultState.filters,
+    selectedEntity,
+    filters,
     collapsedOrganizations: new Set(
       Array.isArray(serialized.collapsedOrganizations)
-        ? serialized.collapsedOrganizations
+        ? (serialized.collapsedOrganizations as number[])
         : []
     ),
     activeView: (serialized.activeView as ViewMode) ?? defaultState.activeView,

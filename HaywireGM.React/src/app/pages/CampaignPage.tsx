@@ -472,7 +472,7 @@ function CampaignPageContent({ campaignId }: { campaignId: number | undefined })
                 onClick={() => {
                   const newTypes = showNPCs
                     ? vizState.filters.entityTypes.filter(t => t !== 'npc')
-                    : [...vizState.filters.entityTypes, 'npc'];
+                    : [...vizState.filters.entityTypes, 'npc' as EntityType];
                   visualization.updateFilters({ entityTypes: newTypes });
                 }}
                 className={showNPCs
@@ -489,7 +489,7 @@ function CampaignPageContent({ campaignId }: { campaignId: number | undefined })
                 onClick={() => {
                   const newTypes = showPCs
                     ? vizState.filters.entityTypes.filter(t => t !== 'pc')
-                    : [...vizState.filters.entityTypes, 'pc'];
+                    : [...vizState.filters.entityTypes, 'pc' as EntityType];
                   visualization.updateFilters({ entityTypes: newTypes });
                 }}
                 className={showPCs
@@ -506,7 +506,7 @@ function CampaignPageContent({ campaignId }: { campaignId: number | undefined })
                 onClick={() => {
                   const newTypes = showOrganizations
                     ? vizState.filters.entityTypes.filter(t => t !== 'organization')
-                    : [...vizState.filters.entityTypes, 'organization'];
+                    : [...vizState.filters.entityTypes, 'organization' as EntityType];
                   visualization.updateFilters({ entityTypes: newTypes });
                 }}
                 className={showOrganizations
