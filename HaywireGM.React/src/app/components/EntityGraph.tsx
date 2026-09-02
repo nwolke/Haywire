@@ -3,6 +3,7 @@ import ForceGraph2D from "react-force-graph-2d";
 import { Relationship } from "@/types/npc";
 import { EntityItem, EntityType } from "@/types/entity";
 import { Users } from "lucide-react";
+import { getRelationshipColor } from "@/domain/relationshipMetadata";
 
 interface EntityGraphProps {
   entities: EntityItem[];
@@ -13,24 +14,6 @@ interface EntityGraphProps {
   width?: number;
   height?: number;
 }
-
-const relationshipColors: Record<string, string> = {
-  acquaintance: '#64748b',
-  ally: '#10b981',
-  'contact/informant': '#14b8a6',
-  employer: '#d97706',
-  enemy: '#ef4444',
-  family: '#a855f7',
-  friend: '#34d399',
-  lover: '#f43f5e',
-  member: '#0ea5e9',
-  mentor: '#3b82f6',
-  patron: '#0ea5e9',
-  rival: '#f97316',
-  stranger: '#71717a',
-  'vassal/follower': '#78716c',
-  neutral: '#6b7280',
-};
 
 // Node colors by entity type
 const NPC_NODE_COLOR_INNER = '#c77dff';
@@ -124,7 +107,7 @@ export function EntityGraph({
       const width = 1.5 + absDisp * 0.5; // Range: 1.5 to 4.0
 
       // For negative attitude, override color to red tones regardless of type
-      let color = relationshipColors[rel.type] ?? relationshipColors.neutral;
+      let color = getRelationshipColor(rel.type);
       if (disp <= -3) color = '#ef4444'; // strong negative = red
       else if (disp < 0) color = '#f97316'; // mild negative = orange
 

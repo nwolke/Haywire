@@ -32,20 +32,14 @@ import {
   Trash2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { FALLBACK_RELATIONSHIP_METADATA, listKnownRelationshipTypes, MEMBERSHIP_METADATA } from "@/domain/relationshipMetadata";
+import { deriveExplicitMemberships } from "@/domain/visualizationSelectors";
+import { resolveMemberships } from "@/domain/membershipPrecedence";
 
 const relationshipLegend: { type: string; color: string; label: string }[] = [
-  { type: 'ally', color: '#10b981', label: 'Ally' },
-  { type: 'contact/informant', color: '#14b8a6', label: 'Contact/Informant' },
-  { type: 'enemy', color: '#ef4444', label: 'Enemy' },
-  { type: 'rival', color: '#f97316', label: 'Rival' },
-  { type: 'family', color: '#a855f7', label: 'Family' },
-  { type: 'member', color: '#0ea5e9', label: 'Member' },
-  { type: 'mentor', color: '#3b82f6', label: 'Mentor' },
-  { type: 'patron', color: '#0ea5e9', label: 'Patron' },
-  { type: 'employer', color: '#d97706', label: 'Employer' },
-  { type: 'lover', color: '#f43f5e', label: 'Lover' },
-  { type: 'vassal/follower', color: '#78716c', label: 'Vassal/Follower' },
-  { type: 'neutral', color: '#6b7280', label: 'Other' },
+  ...listKnownRelationshipTypes().map(entry => ({ type: entry.type, color: entry.color, label: entry.label })),
+  { type: MEMBERSHIP_METADATA.type, color: MEMBERSHIP_METADATA.color, label: MEMBERSHIP_METADATA.label },
+  { type: FALLBACK_RELATIONSHIP_METADATA.type, color: FALLBACK_RELATIONSHIP_METADATA.color, label: FALLBACK_RELATIONSHIP_METADATA.label },
 ];
 
 // Reserve distinct client-only ID bands for derived data:
@@ -158,47 +152,30 @@ export function CampaignPage() {
   ), [organizationEntities]);
 
   const organizationMembershipRelationships = useMemo<Relationship[]>(() => {
-    const existingOrganizationRelationshipKeys = new Set(
-      relationships.flatMap(rel => {
-        if (rel.entityType1 === 'organization' && rel.entityType2 === 'npc') {
-          return [`npc-${rel.npcId2}-organization-${rel.npcId1}`];
-        }
-        if (rel.entityType1 === 'npc' && rel.entityType2 === 'organization') {
-          return [`npc-${rel.npcId1}-organization-${rel.npcId2}`];
-        }
-        return [];
-      }),
-    );
+    // Delegate precedence resolution (explicit relationship membership takes
+    // priority over legacy faction-text membership) to the shared domain
+    // layer (see src/domain/membershipPrecedence.ts) so this logic isn't
+    // duplicated across pages/components.
+    const explicitMemberships = deriveExplicitMemberships(relationships);
+    const memberships = resolveMemberships(explicitMemberships, npcs, organizationEntityByName);
 
-    return npcs.flatMap((npc, index) => {
-      const factionName = npc.faction?.trim();
-      if (!factionName) {
-        return [];
-      }
-
-      const organization = organizationEntityByName.get(factionName.toLowerCase());
-      if (!organization) {
-        return [];
-      }
-
-      const relationshipKey = `npc-${npc.id}-organization-${organization.id}`;
-      if (existingOrganizationRelationshipKeys.has(relationshipKey)) {
-        return [];
-      }
-
-      return [{
-        id: SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE - index,
-        npcId1: npc.id,
-        npcId2: organization.id,
-        entityType1: 'npc',
-        entityType2: 'organization',
-        type: 'member',
-        description: `${npc.name} is part of ${organization.name}.`,
-        attitudeScore: 0,
-        campaignId: npc.campaignId,
-        isDerived: true,
-      }];
-    });
+    return memberships
+      .filter((membership): membership is typeof membership & { source: 'inferred' } => membership.source === 'inferred')
+      .map((membership, index) => {
+        const npc = npcs.find(n => n.id === membership.member.id);
+        return {
+          id: SYNTHETIC_MEMBERSHIP_RELATIONSHIP_ID_BASE - index,
+          npcId1: membership.member.id,
+          npcId2: membership.organization.id,
+          entityType1: membership.member.entityType,
+          entityType2: membership.organization.entityType,
+          type: 'member',
+          description: membership.description,
+          attitudeScore: 0,
+          campaignId: npc?.campaignId,
+          isDerived: true,
+        };
+      });
   }, [npcs, organizationEntityByName, relationships]);
 
   const allRelationships = useMemo(

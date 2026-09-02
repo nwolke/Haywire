@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/app
 import { Badge } from "@/app/components/ui/badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/app/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { getRelationshipColor } from "@/domain/relationshipMetadata";
 
 interface CampaignAnalyticsPanelProps {
   npcs: NPC[];
@@ -13,36 +14,6 @@ interface CampaignAnalyticsPanelProps {
   organizations: EntityItem[];
   relationships: Relationship[];
 }
-
-const relationshipTypeColors: Record<string, string> = {
-  acquaintance: "#64748b",
-  ally: "#10b981",
-  child: "#ec4899",
-  contact: "#14b8a6",
-  "contact/informant": "#14b8a6",
-  employee: "#f59e0b",
-  employer: "#d97706",
-  enemy: "#ef4444",
-  family: "#a855f7",
-  follower: "#6366f1",
-  friend: "#34d399",
-  informant: "#eab308",
-  leader: "#4f46e5",
-  lover: "#f43f5e",
-  member: "#8b5cf6",
-  mentor: "#3b82f6",
-  parent: "#db2777",
-  patron: "#0ea5e9",
-  protege: "#0284c7",
-  rival: "#f97316",
-  sibling: "#d946ef",
-  spouse: "#e11d48",
-  stranger: "#71717a",
-  student: "#06b6d4",
-  vassal: "#78716c",
-  "vassal/follower": "#78716c",
-  neutral: "#6b7280",
-};
 
 const chartConfig = {
   count: {
@@ -76,7 +47,7 @@ export function CampaignAnalyticsPanel({
         type,
         label: formatRelationshipTypeLabel(type),
         count,
-        fill: relationshipTypeColors[type.toLowerCase()] ?? "#6b7280",
+        fill: getRelationshipColor(type),
       }))
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
   }, [relationships]);
